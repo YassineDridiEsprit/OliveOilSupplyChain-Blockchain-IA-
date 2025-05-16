@@ -1,0 +1,8 @@
+python -m venv venv
+source venv/bin/activate
+pip install flask torch torchvision opencv-python pillow
+pip install ultralytics
+pip install flask-cors
+pip install -r requirements.txt
++ create app.py(function for api)
+python app.py
