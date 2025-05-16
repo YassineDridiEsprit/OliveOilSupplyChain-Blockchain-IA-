@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>About - AgriCulture Bootstrap Template</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+
+    <!-- Favicons -->
+    <link href="assets/img/favicon.png" rel="icon">
+    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Marcellus:wght@400&display=swap" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+    <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+
+    <!-- Main CSS File -->
+    <link href="assets/css/main.css" rel="stylesheet">
+
+    <!-- Inline CSS for nav spacing -->
+    <style>
+        .navmenu ul li {
+            margin-right: 25px; /* Adjusted spacing for consistency with the image */
+        }
+        .navmenu ul li:last-child {
+            margin-right: 30px; /* Extra space before the user icon */
+        }
+    </style>
+
+    <!-- Vendor JS Files -->
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body class="about-page">
+
+    <header id="header" class="header d-flex align-items-center position-relative">
+        <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
+            <a href="index1.html" class="logo d-flex align-items-center">
+                <img src="assets/img/logo.png" alt="AgriCulture">
+            </a>
+            <nav id="navmenu" class="navmenu">
+                <ul>
+                    <li><a href="index1.html">Home</a></li>
+                    <li><a href="services.html">Field Services</a></li>
+                    <li><a href="farmerinsect.html">Insect Detection</a></li>
+                    <li class="dropdown"><a href="#"><span>BlockChain System</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+                        <ul>
+                            <li><a href="farmer22.html">Create a Batch</a></li>
+                            <li><a href="loadbatches.html">Load My Batches</a></li>
+                            <li><a href="batchefindfarmer.html">View a Batch</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="about.html" class="active">About Us</a></li>
+                </ul>
+                <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+            </nav>
+            <div class="dropdown ms-3">
+                <a href="#" class="d-flex align-items-center" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-person-circle fs-4"></i> <!-- Reverted to Bootstrap icon -->
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="login.html">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="page-title dark-background" data-aos="fade" style="background-image: url(assets/img/page-title-bg.webp);">
+            <div class="container position-relative">
+                <h1>Olive Oil Traceability System</h1>
+                <p>The Olive Oil Traceability System was created to enhance transparency, quality control, and consumer trust in the olive oil supply chain.</p>
+                <nav class="breadcrumbs">
+                    <ol>
+                        <li><a href="index.html">Home</a></li>
+                        <li class="current">Olive Oil Traceability System</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+        <section id="contact" class="contact section">
+            <div class="mb-5">
+                <iframe style="width: 100%; height: 400px;" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d205746.7997744474!2d10.014434936306714!3d36.81853240032598!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12fd337f5e7ef543%3A0x45d2b53871cf0db3!2sTunis!5e1!3m2!1sfr!2stn!4v1746864751388!5m2!1sfr!2stn" frameborder="0" allowfullscreen=""></iframe>
+            </div>
+            <div class="container section-title" data-aos="fade-up">
+                <h2>Olive Oil Traceability System</h2>
+                <p>Providing Fresh Produce Every Single Day</p>
+            </div>
+
+            <div class="container" data-aos="fade">
+                <div class="row gy-5 gx-lg-5">
+                    <div class="col-lg-4">
+                        <div class="info">
+                            <h3>Importance of Olive Oil Traceability</h3>
+                            <p>It ensures informed consumer choices and supports industry improvement.</p>
+                            <div class="info-item d-flex">
+                                <i class="bi bi-shield-lock"></i>
+                                <div>
+                                    <h4>Product Authenticity:</h4>
+                                    <p> Verifies the origin, production methods, and quality of olive oil, safeguarding against fraud</p>
+                                </div>
+                            </div>
+                            <div class="info-item d-flex">
+                                <i class="bi bi-hand-thumbs-up"></i>
+                                <div>
+                                    <h4>Consumer Trust:</h4>
+                                    <p>Offers transparency, helping consumers make informed decisions about the sustainability and quality of their purchases</p>
+                                </div>
+                            </div>
+                            <div class="info-item d-flex">
+                                <i class="bi bi-truck"></i>
+                                <div>
+                                    <h4>Supply Chain Efficiency:</h4>
+                                    <p>Tracks batch movements across the supply chain, minimizing waste and ensuring timely deliveries</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-8">
+                        <div class="mb-3">
+                            <p>Connected Account: <span id="connectedAccount"></span></p>
+                        </div>
+                        <form id="create-batch-form" class="php-email-form" action="#" method="post">
+                            <div class="form-group mt-3">
+                                <input type="text" class="form-control" id="farmerName" placeholder="Farmer Address" readonly required>
+                            </div>
+                            <div class="form-group mt-3">
+                                <input type="date" class="form-control" id="harvestDate" required>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-6 form-group d-flex align-items-stretch">
+                                    <input type="text" class="form-control" id="variety" placeholder="Olive Variety" readonly required>
+                                    <input type="file" id="variety-input" name="file" accept="image/*" style="display: none;">
+                                    <button type="button" class="btn btn-secondary px-4 rounded-0 rounded-end" id="classify-variety-btn">Classify</button>
+                                </div>
+                                <div class="col-md-6 form-group d-flex align-items-stretch">
+                                    <input type="text" class="form-control" id="quantity" placeholder="Quantity in kg" readonly required>
+                                    <input type="file" id="quantity-input" name="file" accept="video/*" style="display: none;">
+                                    <button type="button" class="btn btn-secondary px-4 rounded-0 rounded-end" id="measure-quantity-btn">Measure Qt</button>
+                                </div>
+                            </div>
+                            <div id="variety-loading" style="display: none;" class="text-center my-3">
+                                <div class="spinner-border text-primary" role="status"></div>
+                                <p>Processing image, please wait...</p>
+                            </div>
+                            <div id="quantity-loading" style="display: none;" class="text-center my-3">
+                                <div class="spinner-border text-primary" role="status"></div>
+                                <p>Processing video, please wait...</p>
+                            </div>
+                            <div class="form-group mt-3">
+                                <input type="text" class="form-control" id="farmLocation" placeholder="Farm Location" required>
+                            </div>
+                            <div class="form-group mt-3">
+                                <textarea class="form-control" id="farmerMethod" placeholder="Farmer Method" required></textarea>
+                            </div>
+                            <div class="my-3">
+                                <div class="loading">Loading</div>
+                                <div class="error-message"></div>
+                                <div class="sent-message">Batch created successfully!</div>
+                            </div>
+                            <div class="text-center mt-3">
+                                <button type="submit" class="btn btn-primary" id="createBatchBtn">Create Batch</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer id="footer" class="footer dark-background">
+        <div class="footer-top">
+            <div class="container">
+                <div class="row gy-4">
+                    <div class="col-lg-4 col-md-6 footer-about">
+                        <a href="index.html" class="logo d-flex align-items-center">
+                            <span class="sitename">AgriCulture</span>
+                        </a>
+                        <div class="footer-contact pt-3">
+                            <p>A108 Adam Street</p>
+                            <p>New York, NY 535022</p>
+                            <p class="mt-3"><strong>Phone:</strong> <span>+1 5589 55488 55</span></p>
+                            <p><strong>Email:</strong> <span>info@example.com</span></p>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-3 footer-links">
+                        <h4>Useful Links</h4>
+                        <ul>
+                            <li><a href="#">Home</a></li>
+                            <li><a href="#">About us</a></li>
+                            <li><a href="#">Services</a></li>
+                            <li><a href="#">Terms of service</a></li>
+                            <li><a href="#">Privacy policy</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-2 col-md-3 footer-links">
+                        <h4>Our Services</h4>
+                        <ul>
+                            <li><a href="#">Web Design</a></li>
+                            <li><a href="#">Web Development</a></li>
+                            <li><a href="#">Product Management</a></li>
+                            <li><a href="#">Marketing</a></li>
+                            <li><a href="#">Graphic Design</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-2 col-md-3 footer-links">
+                        <h4>Hic solutasetp</h4>
+                        <ul>
+                            <li><a href="#">Molestiae accusamus iure</a></li>
+                            <li><a href="#">Excepturi dignissimos</a></li>
+                            <li><a href="#">Suscipit distinctio</a></li>
+                            <li><a href="#">Dilecta</a></li>
+                            <li><a href="#">Sit quas consectetur</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-2 col-md-3 footer-links">
+                        <h4>Nobis illum</h4>
+                        <ul>
+                            <li><a href="#">Ipsam</a></li>
+                            <li><a href="#">Laudantium dolorum</a></li>
+                            <li><a href="#">Dinera</a></li>
+                            <li><a href="#">Trodelas</a></li>
+                            <li><a href="#">Flexo</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="copyright text-center">
+            <div class="container d-flex flex-column flex-lg-row justify-content-center justify-content-lg-between align-items-center">
+                <div class="d-flex flex-column align-items-center align-items-lg-start">
+                    <div>
+                        © Copyright <strong><span>MyWebsite</span></strong>. All Rights Reserved
+                    </div>
+                    <div class="credits">
+                        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a> Distributed by <a href="https://themewagon.com">ThemeWagon</a>
+                    </div>
+                </div>
+                <div class="social-links order-first order-lg-last mb-3 mb-lg-0">
+                    <a href=""><i class="bi bi-twitter-x"></i></a>
+                    <a href=""><i class="bi bi-facebook"></i></a>
+                    <a href=""><i class="bi bi-instagram"></i></a>
+                    <a href=""><i class="bi bi-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+    <div id="preloader"></div>
+
+    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/vendor/aos/aos.js"></script>
+    <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+    <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+    <script src="assets/js/main.js"></script>
+
+    <script>
+        const contractAddress = '0xA7cf92E595D1584C0fdCaDB87Ee48a39d8a65bc9';
+        const contractABI = [
+            {
+                "inputs": [
+                    { "internalType": "string", "name": "farmer", "type": "string" },
+                    { "internalType": "string", "name": "harvestDate", "type": "string" },
+                    { "internalType": "string", "name": "location", "type": "string" },
+                    { "internalType": "string", "name": "method", "type": "string" },
+                    { "internalType": "uint256", "name": "quantity", "type": "uint256" },
+                    { "internalType": "string", "name": "variety", "type": "string" }
+                ],
+                "name": "createBatch",
+                "outputs": [
+                    { "internalType": "uint256", "name": "batchId", "type": "uint256" }
+                ],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            }
+        ];
+
+        let provider;
+        let signer;
+        let contract;
+        let currentAccount;
+        let messageTimeout = null;
+
+        function toChecksumAddress(address) {
+            return ethers.utils.getAddress(address.toLowerCase());
+        }
+
+        function showStatusMessage(message, type = 'error') {
+            console.log(`Displaying ${type} message: ${message}`);
+            const messageDiv = document.querySelector('.my-3');
+            if (!messageDiv) {
+                console.error("Error: .my-3 div not found");
+                return;
+            }
+            const errorMessage = messageDiv.querySelector('.error-message');
+            const sentMessage = messageDiv.querySelector('.sent-message');
+
+            if (messageTimeout) {
+                clearTimeout(messageTimeout);
+            }
+
+            if (errorMessage) errorMessage.style.display = 'none';
+            if (sentMessage) sentMessage.style.display = 'none';
+            if (errorMessage) errorMessage.textContent = '';
+            if (sentMessage) sentMessage.textContent = '';
+
+            if (type === 'success' && sentMessage) {
+                sentMessage.textContent = message;
+                sentMessage.style.display = 'block';
+            } else if (errorMessage) {
+                errorMessage.textContent = message;
+                errorMessage.style.display = 'block';
+            }
+
+            messageTimeout = setTimeout(() => {
+                if (errorMessage) errorMessage.style.display = 'none';
+                if (sentMessage) sentMessage.style.display = 'none';
+                console.log(`Hid message: ${message}`);
+            }, 2500);
+        }
+
+        async function init() {
+            if (!window.ethereum) {
+                showStatusMessage("Please install MetaMask to use this application!");
+                return;
+            }
+
+            try {
+                provider = new ethers.providers.Web3Provider(window.ethereum);
+                const accounts = await provider.send("eth_requestAccounts", []);
+                if (accounts.length === 0) {
+                    console.log("No accounts connected on initial load; waiting for user to connect via MetaMask.");
+                    return;
+                }
+                signer = provider.getSigner();
+                contract = new ethers.Contract(contractAddress, contractABI, signer);
+                currentAccount = await signer.getAddress();
+                const checksumAddress = toChecksumAddress(currentAccount);
+                document.getElementById('connectedAccount').textContent = checksumAddress;
+                document.getElementById('farmerName').value = checksumAddress;
+
+                window.ethereum.on('accountsChanged', async (accounts) => {
+                    if (accounts.length > 0) {
+                        currentAccount = accounts[0];
+                        const newChecksumAddress = toChecksumAddress(currentAccount);
+                        document.getElementById('connectedAccount').textContent = newChecksumAddress;
+                        document.getElementById('farmerName').value = newChecksumAddress;
+                    } else {
+                        showStatusMessage("No account connected. Please reconnect MetaMask.");
+                        document.getElementById('connectedAccount').textContent = '';
+                        document.getElementById('farmerName').value = '';
+                    }
+                });
+            } catch (error) {
+                console.error("Error connecting:", error);
+                showStatusMessage("Error connecting to Ethereum: " + error.message);
+            }
+        }
+
+        function resetForm() {
+            console.log("Attempting to reset form");
+            const form = document.getElementById('create-batch-form');
+            if (form) {
+                form.reset();
+                document.getElementById('farmerName').value = currentAccount ? toChecksumAddress(currentAccount) : '';
+
+                const varietyInput = document.getElementById('variety-input');
+                const quantityInput = document.getElementById('quantity-input');
+                if (varietyInput && quantityInput) {
+                    const newVarietyInput = varietyInput.cloneNode(true);
+                    const newQuantityInput = quantityInput.cloneNode(true);
+                    varietyInput.parentNode.replaceChild(newVarietyInput, varietyInput);
+                    quantityInput.parentNode.replaceChild(newQuantityInput, quantityInput);
+                    console.log("File inputs replaced successfully");
+
+                    // Reattach event listeners to the new inputs
+                    attachVarietyInputListener();
+                    attachQuantityInputListener();
+                    console.log("Event listeners reattached after form reset");
+                } else {
+                    console.log("Error: Could not find variety or quantity input elements");
+                }
+                console.log("Form reset completed");
+            } else {
+                console.log("Error: Form element not found");
+            }
+        }
+
+        function attachVarietyInputListener() {
+            const varietyInput = document.getElementById('variety-input');
+            if (varietyInput) {
+                varietyInput.addEventListener('change', function() {
+                    if (this.files.length === 0) {
+                        showStatusMessage("Please select an image to classify");
+                        return;
+                    }
+
+                    var formData = new FormData();
+                    formData.append('file', this.files[0]);
+                    console.log("Initiating variety classification AJAX call to http://127.0.0.1:8000/classify");
+
+                    $('#variety-loading').css('display', 'block');
+
+                    $.ajax({
+                        url: 'http://127.0.0.1:8000/classify',
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(response) {
+                            let variety = response;
+                            document.getElementById('variety').value = variety;
+                            $('#variety-loading').css('display', 'none');
+                            console.log("Variety classification success, response:", variety);
+                            showStatusMessage(`Variety classified as: ${variety}`, 'success');
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Error during variety classification:", error, "Status:", status, "XHR:", xhr);
+                            $('#variety-loading').css('display', 'none');
+                            showStatusMessage("Error classifying variety: " + error);
+                        }
+                    });
+                });
+                console.log("Variety input listener attached");
+            } else {
+                console.log("Error: Variety input not found during listener attachment");
+            }
+        }
+
+        function attachQuantityInputListener() {
+            const quantityInput = document.getElementById('quantity-input');
+            if (quantityInput) {
+                quantityInput.addEventListener('change', function() {
+                    if (this.files.length === 0) {
+                        showStatusMessage("Please select a video to measure quantity");
+                        return;
+                    }
+
+                    var formData = new FormData();
+                    formData.append('file', this.files[0]);
+                    console.log("Initiating quantity measurement AJAX call to http://127.0.0.1:8000/quantify");
+
+                    $('#quantity-loading').css('display', 'block');
+
+                    $.ajax({
+                        url: 'http://127.0.0.1:8000/quantify',
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(response) {
+                            let quantity = response;
+                            document.getElementById('quantity').value = quantity;
+                            $('#quantity-loading').css('display', 'none');
+                            console.log("Quantity measurement success, response:", quantity);
+                            showStatusMessage(`Quantity measured as: ${quantity} kg`, 'success');
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Error during quantity measurement:", error, "Status:", status, "XHR:", xhr);
+                            $('#quantity-loading').css('display', 'none');
+                            showStatusMessage("Error measuring quantity: " + error);
+                        }
+                    });
+                });
+                console.log("Quantity input listener attached");
+            } else {
+                console.log("Error: Quantity input not found during listener attachment");
+            }
+        }
+
+        $('#create-batch-form').submit(function(event) {
+            event.preventDefault();
+            console.log("Form submission triggered");
+            if (!currentAccount) {
+                showStatusMessage("Please connect MetaMask to create a batch.");
+                return;
+            }
+
+            const farmer = document.getElementById("farmerName").value.trim();
+            const harvestDate = document.getElementById("harvestDate").value.trim();
+            const location = document.getElementById("farmLocation").value.trim();
+            const method = document.getElementById("farmerMethod").value.trim();
+            const variety = document.getElementById("variety").value.trim();
+            const quantityKg = document.getElementById("quantity").value.trim();
+
+            if (!farmer || !harvestDate || !location || !method || !variety || !quantityKg) {
+                showStatusMessage("All fields are required. Please fill in every field.");
+                return;
+            }
+
+            const quantityNum = parseFloat(quantityKg);
+            if (isNaN(quantityNum) || quantityNum <= 0) {
+                showStatusMessage("Quantity must be a valid positive number.");
+                return;
+            }
+
+            try {
+                const quantityGrams = Math.round(quantityNum * 1000);
+                document.querySelector('.my-3 .loading').style.display = 'block';
+                console.log("Submitting transaction with quantity:", quantityGrams);
+
+                contract.createBatch(farmer, harvestDate, location, method, quantityGrams, variety)
+                    .then(tx => {
+                        console.log("Transaction sent:", tx.hash);
+                        document.querySelector('.my-3 .loading').style.display = 'none';
+                        showStatusMessage("Transaction sent, waiting for confirmation...");
+                        return tx.wait();
+                    })
+                    .then(receipt => {
+                        console.log("Transaction confirmed:", receipt.transactionHash);
+                        showStatusMessage("Batch created successfully!", 'success');
+                    })
+                    .catch(err => {
+                        console.error("Error in batch creation:", err);
+                        document.querySelector('.my-3 .loading').style.display = 'none';
+                        showStatusMessage("Error creating batch: " + (err.reason || err.message || "Unknown error"));
+                    })
+                    .finally(() => {
+                        console.log("Transaction process completed, resetting form");
+                        resetForm();
+                    });
+            } catch (err) {
+                console.error("Unexpected error in batch creation:", err);
+                document.querySelector('.my-3 .loading').style.display = 'none';
+                showStatusMessage("Error creating batch: " + (err.reason || err.message || "Unknown error"));
+            }
+        });
+
+        document.getElementById('classify-variety-btn').addEventListener('click', function() {
+            const fileInput = document.getElementById('variety-input');
+            fileInput.click();
+        });
+
+        document.getElementById('measure-quantity-btn').addEventListener('click', function() {
+            const fileInput = document.getElementById('quantity-input');
+            fileInput.click();
+        });
+
+        // Initial attachment of event listeners
+        attachVarietyInputListener();
+        attachQuantityInputListener();
+
+        window.addEventListener('load', init);
+
+
+
+        
+    </script>
+</body>
+</html>

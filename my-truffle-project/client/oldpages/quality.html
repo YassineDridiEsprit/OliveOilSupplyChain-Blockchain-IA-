@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Olive Oil Traceability - Quality Portal</title>
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+  <style>
+    :root {
+      --primary-color: #5a7247;
+      --secondary-color: #8a9a5b;
+      --accent-color: #d4af37;
+      --light-bg: #f8f9fa;
+      --dark-text: #2c3e50;
+      --light-text: #f8f9fa;
+      --border-radius: 8px;
+      --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.6;
+      color: var(--dark-text);
+      background-color: var(--light-bg);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    h1, h2, h3 {
+      font-weight: 600;
+      color: var(--primary-color);
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      text-align: center;
+      padding-top: 1rem;
+      position: relative;
+    }
+
+    h1::after {
+      content: '';
+      display: block;
+      width: 100px;
+      height: 4px;
+      background: var(--accent-color);
+      margin: 0.5rem auto 1.5rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      padding: 2rem;
+      margin-bottom: 2rem;
+      transition: var(--transition);
+      border-left: 4px solid var(--primary-color);
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .batch-card {
+      background: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      border-left: 3px solid var(--secondary-color);
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    select {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      margin: 0.5rem 0 1.5rem;
+      border: 1px solid #ddd;
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+      transition: var(--transition);
+    }
+
+    input[readonly] {
+      background-color: #f0f0f0;
+      cursor: not-allowed;
+    }
+
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(90, 114, 71, 0.2);
+    }
+
+    button {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 500;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      transition: var(--transition);
+      margin: 0.5rem 0;
+      display: inline-block;
+    }
+
+    button:hover {
+      background-color: #3a5a20;
+      transform: translateY(-2px);
+    }
+
+    button:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 2rem;
+      height: 2rem;
+      border: 3px solid rgba(90, 114, 71, 0.3);
+      border-radius: 50%;
+      border-top-color: var(--primary-color);
+      animation: spin 1s ease-in-out infinite;
+      margin: 2rem auto;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .status-message {
+      padding: 1rem;
+      margin: 1rem 0;
+      border-radius: var(--border-radius);
+      transition: opacity 0.5s ease;
+    }
+
+    .status-success {
+      background-color: #e6f7e6;
+      color: #2e7d32;
+    }
+
+    .status-error {
+      background-color: #ffebee;
+      color: #c62828;
+    }
+
+    .status-warning {
+      background-color: #fff8e1;
+      color: #ff8f00;
+    }
+
+    .account-info {
+      background-color: #f0f7ed;
+      padding: 1rem;
+      border-radius: var(--border-radius);
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+    }
+
+    .batch-details {
+      margin-top: 1rem;
+      padding: 1rem;
+      background-color: #f9f9f9;
+      border-radius: var(--border-radius);
+    }
+
+    .batch-details h4 {
+      margin-bottom: 0.5rem;
+      color: var(--secondary-color);
+    }
+
+    .batch-details p {
+      margin-bottom: 0.5rem;
+    }
+
+    .fade-out {
+      opacity: 0;
+    }
+
+    .batch-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    
+    .batch-actions button {
+      margin: 0;
+    }
+    
+    .qr-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.7);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .qr-modal-content {
+      background-color: white;
+      padding: 20px;
+      border-radius: var(--border-radius);
+      text-align: center;
+      max-width: 90%;
+      max-height: 90%;
+      overflow-y: auto;
+    }
+    
+    .qr-modal-content img {
+      max-width: 100%;
+      height: auto;
+      margin: 15px 0;
+    }
+    
+    .close-modal {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      color: white;
+      font-size: 28px;
+      cursor: pointer;
+    }
+    
+    .qr-download-btn {
+      background-color: var(--secondary-color);
+    }
+    
+    .qr-download-btn:hover {
+      background-color: #6b7d4a;
+    }
+
+    .field-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 1.5rem;
+    }
+
+    .field-container input {
+      flex: 1;
+    }
+
+    .field-container button {
+      padding: 0.5rem 1rem;
+      margin: 0;
+    }
+
+    .prediction-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.7);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .prediction-modal-content {
+      background-color: white;
+      padding: 20px;
+      border-radius: var(--border-radius);
+      max-width: 500px;
+      width: 90%;
+      max-height: 90%;
+      overflow-y: auto;
+    }
+
+    .prediction-modal-content h3 {
+      color: var(--primary-color);
+      margin-bottom: 1rem;
+    }
+
+    .prediction-modal-content label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
+    .prediction-modal-content input {
+      margin-bottom: 1rem;
+    }
+
+    .prediction-modal-content button {
+      width: 100%;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 0 10px;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      h2 {
+        font-size: 1.5rem;
+      }
+      
+      .card {
+        padding: 1.5rem;
+      }
+      
+      .batch-actions {
+        flex-direction: column;
+        gap: 5px;
+      }
+
+      .field-container {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Olive Oil Traceability System - Quality Portal</h1>
+    <div class="account-info">
+      <p>Connected Account: <span id="connectedAccount"></span></p>
+    </div>
+
+    <div class="card">
+      <h2>View Batch by ID</h2>
+      <input type="number" id="batchIdInput" placeholder="Enter Batch ID">
+      <button id="viewBatchBtn">View Batch</button>
+      <div id="batchDetails"></div>
+    </div>
+
+    <div class="card">
+      <h2>My Quality Check Batches</h2>
+      <button id="viewMyBatchesBtn">View My Batches</button>
+      <div id="myBatches"></div>
+    </div>
+
+    <div class="card">
+      <h2>Log Quality Check</h2>
+      <input type="number" id="batchIdQuality" placeholder="Batch ID">
+      <input type="hidden" id="onhIdQuality" placeholder="ONH ID (Wallet Address)" readonly>
+      <input type="text" id="labQuality" placeholder="Lab Name">
+      <input type="number" id="acidityQuality" placeholder="Acidity (Scaled)" step="0.1">
+      <input type="number" id="peroxideQuality" placeholder="Peroxide Value (Scaled)" step="0.1">
+      <div class="field-container">
+        <input type="text" id="qualityQuality" placeholder="Quality (manual prediction)" readonly>
+        <button type="button" onclick="openPredictionModal('quality')">Predict Quality</button>
+      </div>
+      <div class="field-container">
+        <input type="text" id="areaQuality" placeholder="Area (manual prediction)" readonly>
+        <button type="button" onclick="openPredictionModal('area')">Predict Area</button>
+      </div>
+      <label><input type="checkbox" id="certifiedOrganicQuality"> Certified Organic</label><br>
+      <button id="logQualityCheckBtn">Submit</button>
+      <div id="qualityCheckStatus" class="status-message"></div>
+    </div>
+  </div>
+
+  <!-- QR Code Modal -->
+  <div id="qrModal" class="qr-modal">
+    <span class="close-modal">×</span>
+    <div class="qr-modal-content">
+      <h3>Batch QR Code</h3>
+      <div id="qrCodeImage"></div>
+      <p>Scan this QR code to view batch details</p>
+      <button id="downloadQR" class="qr-download-btn">Download QR Code</button>
+    </div>
+  </div>
+
+  <!-- Prediction Modal for Quality and Area -->
+  <div id="predictionModal" class="prediction-modal">
+    <span class="close-modal">×</span>
+    <div class="prediction-modal-content">
+      <h3>Predict <span id="predictionField"></span></h3>
+      <!-- Area Prediction Fields -->
+      <div id="areaFields" style="display: none;">
+        <label>Palmitic (%):</label>
+        <input type="number" id="palmiticInput" step="0.1" placeholder="e.g., 12.5">
+        <label>Palmitoleic (%):</label>
+        <input type="number" id="palmitoleicInput" step="0.1" placeholder="e.g., 1.2">
+        <label>Stearic (%):</label>
+        <input type="number" id="stearicInput" step="0.1" placeholder="e.g., 2.5">
+        <label>Oleic (%):</label>
+        <input type="number" id="oleicInput" step="0.1" placeholder="e.g., 70.0">
+        <label>Linoleic (%):</label>
+        <input type="number" id="linoleicInput" step="0.1" placeholder="e.g., 10.0">
+        <label>Linolenic (%):</label>
+        <input type="number" id="linolenicInput" step="0.1" placeholder="e.g., 0.8">
+        <label>Arachidic (%):</label>
+        <input type="number" id="arachidicInput" step="0.1" placeholder="e.g., 0.4">
+        <label>Eicosenoic (%):</label>
+        <input type="number" id="eicosenoicInput" step="0.1" placeholder="e.g., 0.3">
+      </div>
+      <!-- Quality Prediction Fields -->
+      <div id="qualityFields" style="display: none;">
+        <label>FAEES:</label>
+        <input type="number" id="faeesInput" step="0.1" placeholder="e.g., 4.5">
+        <label>K232:</label>
+        <input type="number" id="k232Input" step="0.1" placeholder="e.g., 1.9">
+        <label>K270:</label>
+        <input type="number" id="k270Input" step="0.1" placeholder="e.g., 0.17">
+        <label>Acidity (%):</label>
+        <input type="number" id="acidityInput" step="0.1" placeholder="e.g., 1.3">
+        <label>Peroxide Index (meq/kg):</label>
+        <input type="number" id="peroxideIndexInput" step="0.1" placeholder="e.g., 6.7">
+      </div>
+      <button onclick="submitPrediction()">Submit Prediction</button>
+    </div>
+  </div>
+
+  <script>
+    const contractAddress = '0xA7cf92E595D1584C0fdCaDB87Ee48a39d8a65bc9';
+    const contractABI = [
+      {
+        "inputs": [
+          { "internalType": "uint256", "name": "batchId", "type": "uint256" }
+        ],
+        "name": "getBatch",
+        "outputs": [
+          {
+            "components": [
+              {
+                "components": [
+                  { "internalType": "string", "name": "farmer", "type": "string" },
+                  { "internalType": "string", "name": "date", "type": "string" },
+                  { "internalType": "string", "name": "location", "type": "string" },
+                  { "internalType": "string", "name": "method", "type": "string" },
+                  { "internalType": "uint256", "name": "quantity", "type": "uint256" },
+                  { "internalType": "string", "name": "variety", "type": "string" }
+                ],
+                "internalType": "struct SupplyChain.Harvesting",
+                "name": "harvesting",
+                "type": "tuple"
+              },
+              {
+                "components": [
+                  { "internalType": "uint256", "name": "duration", "type": "uint256" },
+                  { "internalType": "string", "name": "conditions", "type": "string" },
+                  { "internalType": "string", "name": "transporterId", "type": "string" },
+                  { "internalType": "string", "name": "vehicleType", "type": "string" }
+                ],
+                "internalType": "struct SupplyChain.Transportation",
+                "name": "transportation",
+                "type": "tuple"
+              },
+              {
+                "components": [
+                  { "internalType": "uint256", "name": "duration", "type": "uint256" },
+                  { "internalType": "string", "name": "pressingId", "type": "string" },
+                  { "internalType": "string", "name": "conditions", "type": "string" },
+                  { "internalType": "uint256", "name": "temperature", "type": "uint256" },
+                  { "internalType": "uint256", "name": "humidity", "type": "uint256" },
+                  { "internalType": "uint256", "name": "goodOlives", "type": "uint256" },
+                  { "internalType": "uint256", "name": "badOlives", "type": "uint256" }
+                ],
+                "internalType": "struct SupplyChain.StorageBeforePressing",
+                "name": "storageBeforePressing",
+                "type": "tuple"
+              },
+              {
+                "components": [
+                  { "internalType": "string", "name": "date", "type": "string" },
+                  { "internalType": "string", "name": "pressingId", "type": "string" },
+                  { "internalType": "string", "name": "facility", "type": "string" },
+                  { "internalType": "string", "name": "method", "type": "string" },
+                  { "internalType": "string", "name": "conditions", "type": "string" },
+                  { "internalType": "uint256", "name": "temperature", "type": "uint256" },
+                  { "internalType": "uint256", "name": "pressure", "type": "uint256" },
+                  { "internalType": "string", "name": "operatorName", "type": "string" }
+                ],
+                "internalType": "struct SupplyChain.PressingProcess",
+                "name": "pressingProcess",
+                "type": "tuple"
+              },
+              {
+                "components": [
+                  { "internalType": "string", "name": "tankId", "type": "string" },
+                  { "internalType": "string", "name": "pressingId", "type": "string" },
+                  { "internalType": "uint256", "name": "duration", "type": "uint256" },
+                  { "internalType": "string", "name": "conditions", "type": "string" },
+                  { "internalType": "uint256", "name": "temperature", "type": "uint256" },
+                  { "internalType": "uint256", "name": "humidity", "type": "uint256" },
+                  { "internalType": "bool", "name": "inertAtmosphere", "type": "bool" }
+                ],
+                "internalType": "struct SupplyChain.StorageAfterPressing",
+                "name": "storageAfterPressing",
+                "type": "tuple"
+              },
+              {
+                "components": [
+                  { "internalType": "string", "name": "lab", "type": "string" },
+                  { "internalType": "string", "name": "onhId", "type": "string" },
+                  { "internalType": "uint256", "name": "acidity", "type": "uint256" },
+                  { "internalType": "string", "name": "quality", "type": "string" },
+                  { "internalType": "string", "name": "area", "type": "string" },
+                  { "internalType": "uint256", "name": "peroxideValue", "type": "uint256" },
+                  { "internalType": "bool", "name": "certifiedOrganic", "type": "bool" }
+                ],
+                "internalType": "struct SupplyChain.QualityCheck",
+                "name": "qualityCheck",
+                "type": "tuple"
+              },
+              { "internalType": "bool", "name": "isFinalized", "type": "bool" }
+            ],
+            "internalType": "struct SupplyChain.Batch",
+            "name": "",
+            "type": "tuple"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          { "internalType": "string", "name": "onhId", "type": "string" }
+        ],
+        "name": "getBatchesByOnhId",
+        "outputs": [
+          { "internalType": "uint256[]", "name": "", "type": "uint256[]" }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          { "internalType": "uint256", "name": "batchId", "type": "uint256" },
+          { "internalType": "string", "name": "onhId", "type": "string" },
+          { "internalType": "string", "name": "lab", "type": "string" },
+          { "internalType": "uint256", "name": "acidityScaled", "type": "uint256" },
+          { "internalType": "string", "name": "quality", "type": "string" },
+          { "internalType": "string", "name": "area", "type": "string" },
+          { "internalType": "uint256", "name": "peroxideValueScaled", "type": "uint256" },
+          { "internalType": "bool", "name": "certifiedOrganic", "type": "bool" }
+        ],
+        "name": "logQualityCheck",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      }
+    ];
+    
+    let provider, signer, contract, currentAccount;
+    let currentPredictionField = '';
+
+    function toChecksumAddress(address) {
+      return ethers.utils.getAddress(address.toLowerCase());
+    }
+
+    function showTemporaryError(elementId, message) {
+      const element = document.getElementById(elementId);
+      element.innerHTML = `
+        <div class="status-message status-error">
+          ${message}
+        </div>
+      `;
+      setTimeout(() => {
+        element.classList.add('fade-out');
+        setTimeout(() => {
+          element.innerHTML = '';
+          element.classList.remove('fade-out');
+        }, 500);
+      }, 5000);
+    }
+
+    function showTemporarySuccess(elementId, message) {
+      const element = document.getElementById(elementId);
+      element.innerHTML = `
+        <div class="status-message status-success">
+          ${message}
+        </div>
+      `;
+      setTimeout(() => {
+        element.classList.add('fade-out');
+        setTimeout(() => {
+          element.innerHTML = '';
+          element.classList.remove('fade-out');
+        }, 500);
+      }, 5000);
+    }
+
+    function generateQRCode(batchId) {
+      // Encryption key (should match the one used in trace.html)
+      const key = CryptoJS.enc.Hex.parse('0123456789abcdef0123456789abcdef');
+      const iv = CryptoJS.enc.Hex.parse('abcdef9876543210abcdef9876543210');
+
+      // Data to encrypt: batchId and traceability URL
+      const traceUrl = `${window.location.origin}/trace?batchId=${batchId}`;
+      const dataToEncrypt = `batchId=${batchId}&url=${traceUrl}`;
+      
+      // Encrypt the data
+      const encrypted = CryptoJS.AES.encrypt(dataToEncrypt, key, { iv: iv }).toString();
+
+      // Generate QR code with encrypted data
+      const qr = qrcode(0, 'L');
+      qr.addData(encrypted);
+      qr.make();
+      
+      const qrImage = qr.createImgTag(4);
+      document.getElementById('qrCodeImage').innerHTML = qrImage;
+      document.getElementById('qrModal').style.display = 'flex';
+      
+      const closeModal = document.querySelector('#qrModal .close-modal');
+      closeModal.onclick = () => {
+        document.getElementById('qrModal').style.display = 'none';
+      };
+
+      document.getElementById('downloadQR').onclick = function() {
+        const canvas = document.createElement('canvas');
+        const size = qr.getModuleCount() * 4;
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext('2d');
+        
+        for (let row = 0; row < qr.getModuleCount(); row++) {
+          for (let col = 0; col < qr.getModuleCount(); col++) {
+            ctx.fillStyle = qr.isDark(row, col) ? '#000000' : '#ffffff';
+            ctx.fillRect(col * 4, row * 4, 4, 4);
+          }
+        }
+        
+        const link = document.createElement('a');
+        link.download = `batch-${batchId}-qr.png`;
+        link.href = canvas.toDataURL();
+        link.click();
+      };
+    }
+
+    function openPredictionModal(field) {
+      currentPredictionField = field;
+      document.getElementById('predictionField').textContent = field.charAt(0).toUpperCase() + field.slice(1);
+      
+      // Show/hide fields based on prediction type
+      if (field === 'quality') {
+        document.getElementById('qualityFields').style.display = 'block';
+        document.getElementById('areaFields').style.display = 'none';
+        // Clear quality fields
+        document.getElementById('faeesInput').value = '';
+        document.getElementById('k232Input').value = '';
+        document.getElementById('k270Input').value = '';
+        document.getElementById('acidityInput').value = '';
+        document.getElementById('peroxideIndexInput').value = '';
+      } else if (field === 'area') {
+        document.getElementById('areaFields').style.display = 'block';
+        document.getElementById('qualityFields').style.display = 'none';
+        // Clear area fields
+        document.getElementById('palmiticInput').value = '';
+        document.getElementById('palmitoleicInput').value = '';
+        document.getElementById('stearicInput').value = '';
+        document.getElementById('oleicInput').value = '';
+        document.getElementById('linoleicInput').value = '';
+        document.getElementById('linolenicInput').value = '';
+        document.getElementById('arachidicInput').value = '';
+        document.getElementById('eicosenoicInput').value = '';
+      }
+      
+      document.getElementById('predictionModal').style.display = 'flex';
+      
+      const closeModal = document.querySelector('#predictionModal .close-modal');
+      closeModal.onclick = () => {
+        document.getElementById('predictionModal').style.display = 'none';
+      };
+    }
+
+    function submitPrediction() {
+      let features, url;
+      
+      if (currentPredictionField === 'area') {
+        features = {
+          palmitic: parseFloat(document.getElementById('palmiticInput').value),
+          palmitoleic: parseFloat(document.getElementById('palmitoleicInput').value),
+          stearic: parseFloat(document.getElementById('stearicInput').value),
+          oleic: parseFloat(document.getElementById('oleicInput').value),
+          linoleic: parseFloat(document.getElementById('linoleicInput').value),
+          linolenic: parseFloat(document.getElementById('linolenicInput').value),
+          arachidic: parseFloat(document.getElementById('arachidicInput').value),
+          eicosenoic: parseFloat(document.getElementById('eicosenoicInput').value)
+        };
+        url = 'http://127.0.0.1:8000/predict';
+      } else if (currentPredictionField === 'quality') {
+        features = {
+          FAEES: parseFloat(document.getElementById('faeesInput').value),
+          K232: parseFloat(document.getElementById('k232Input').value),
+          K270: parseFloat(document.getElementById('k270Input').value),
+          Acidity: parseFloat(document.getElementById('acidityInput').value),
+          Peroxide_Index: parseFloat(document.getElementById('peroxideIndexInput').value)
+        };
+        url = 'http://127.0.0.1:8000/predict2';
+      }
+
+      for (const [key, value] of Object.entries(features)) {
+        if (isNaN(value)) {
+          showTemporaryError('qualityCheckStatus', `Please enter a valid number for ${key}`);
+          return;
+        }
+      }
+
+      $.ajax({
+        url: url,
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(features),
+        success: function(response) {
+          let prediction;
+          if (currentPredictionField === 'area') {
+            prediction = response.predicted_area;
+            if (!prediction) {
+              showTemporaryError('qualityCheckStatus', 'Invalid area prediction response');
+              return;
+            }
+          } else if (currentPredictionField === 'quality') {
+            prediction = response.predicted_quality;
+            if (!prediction) {
+              showTemporaryError('qualityCheckStatus', 'Invalid quality prediction response');
+              return;
+            }
+          }
+          document.getElementById(`${currentPredictionField}Quality`).value = prediction;
+          showTemporarySuccess('qualityCheckStatus', `${currentPredictionField.charAt(0).toUpperCase() + currentPredictionField.slice(1)} predicted: ${prediction}`);
+          document.getElementById('predictionModal').style.display = 'none';
+        },
+        error: function(xhr, status, error) {
+          console.error("Prediction error:", {
+            status: xhr.status,
+            statusText: xhr.statusText,
+            error: error
+          });
+          showTemporaryError('qualityCheckStatus', `Error predicting ${currentPredictionField}: ${xhr.status} - ${xhr.statusText} - ${error}`);
+        }
+      });
+    }
+
+    async function init() {
+      if (window.ethereum) {
+        try {
+          provider = new ethers.providers.Web3Provider(window.ethereum);
+          await provider.send("eth_requestAccounts", []);
+          signer = provider.getSigner();
+          contract = new ethers.Contract(contractAddress, contractABI, signer);
+          
+          currentAccount = await signer.getAddress();
+          const checksumAddress = toChecksumAddress(currentAccount);
+          document.getElementById('connectedAccount').textContent = checksumAddress;
+          document.getElementById('onhIdQuality').value = checksumAddress;
+          
+          console.log("Connected with account:", checksumAddress);
+          
+          setupModalClose();
+        } catch (error) {
+          console.error("Error connecting:", error);
+          showTemporaryError('qualityCheckStatus', "Error connecting to Ethereum: " + error.message);
+        }
+      } else {
+        showTemporaryError('qualityCheckStatus', "Please install MetaMask to use this application!");
+      }
+    }
+
+    function setupModalClose() {
+      const closeButtons = document.querySelectorAll('.close-modal');
+      closeButtons.forEach(button => {
+        button.onclick = () => {
+          const modal = button.closest('.qr-modal, .prediction-modal');
+          if (modal) modal.style.display = 'none';
+        };
+      });
+
+      window.addEventListener('click', function(event) {
+        if (event.target.id === 'qrModal') {
+          document.getElementById('qrModal').style.display = 'none';
+        }
+        if (event.target.id === 'predictionModal') {
+          document.getElementById('predictionModal').style.display = 'none';
+        }
+      });
+    }
+
+    document.getElementById('viewBatchBtn').addEventListener('click', async () => {
+      const batchId = document.getElementById('batchIdInput').value;
+      if (!batchId) {
+        showTemporaryError('batchDetails', "Please enter a batch ID");
+        return;
+      }
+
+      try {
+        document.getElementById('batchDetails').innerHTML = `
+          <div class="loading-spinner"></div>
+          <p>Loading batch details...</p>
+        `;
+
+        const batch = await contract.getBatch(batchId);
+        if (!batch || !batch.harvesting) {
+          throw new Error('Batch does not exist');
+        }
+        displayBatchDetails(batchId, batch, 'batchDetails');
+      } catch (err) {
+        console.error(err);
+        showTemporaryError('batchDetails', `Error: ${err.reason || err.message || 'Batch does not exist'}`);
+      }
+    });
+
+    document.getElementById('viewMyBatchesBtn').addEventListener('click', async () => {
+      if (!currentAccount) {
+        showTemporaryError('myBatches', "Please connect your wallet first");
+        return;
+      }
+
+      try {
+        document.getElementById('myBatches').innerHTML = `
+          <div class="loading-spinner"></div>
+          <p>Loading your batches...</p>
+        `;
+
+        const batchIds = await contract.getBatchesByOnhId(currentAccount);
+        
+        if (batchIds.length === 0) {
+          document.getElementById('myBatches').innerHTML = `
+            <div class="status-message">
+              No batches found for your ONH ID (wallet address).
+            </div>
+          `;
+          return;
+        }
+
+        let batchesHTML = '';
+        for (const batchId of batchIds) {
+          const batch = await contract.getBatch(batchId);
+          batchesHTML += `
+            <div class="batch-card">
+              <p><strong>Batch ID:</strong> ${batchId}</p>
+              <p><strong>Farmer:</strong> ${batch.harvesting.farmer || "Not specified"}</p>
+              <p><strong>Harvest Date:</strong> ${batch.harvesting.date || "Not specified"}</p>
+              <p><strong>Status:</strong> ${batch.isFinalized ? "✅ Finalized" : "❌ Not Finalized"}</p>
+              <div class="batch-actions">
+                <button onclick="loadBatchDetails(${batchId})">
+                  View Full Details
+                </button>
+                <button onclick="generateQRCode(${batchId})">
+                  Generate QR
+                </button>
+              </div>
+              <div id="batch-${batchId}-details" style="display:none; margin-top:1rem;"></div>
+            </div>
+          `;
+        }
+
+        document.getElementById('myBatches').innerHTML = batchesHTML;
+      } catch (err) {
+        console.error(err);
+        showTemporaryError('myBatches', `Error loading your batches: ${err.reason || err.message}`);
+      }
+    });
+
+    document.getElementById('logQualityCheckBtn').addEventListener('click', async () => {
+      const batchId = document.getElementById('batchIdQuality').value;
+      const onhId = document.getElementById('onhIdQuality').value;
+      const lab = document.getElementById('labQuality').value;
+      let acidityScaled = document.getElementById('acidityQuality').value;
+      const quality = document.getElementById('qualityQuality').value;
+      const area = document.getElementById('areaQuality').value;
+      let peroxideValueScaled = document.getElementById('peroxideQuality').value;
+      const certifiedOrganic = document.getElementById('certifiedOrganicQuality').checked;
+
+      if (!batchId || !onhId || !lab || !acidityScaled || !quality || !area || !peroxideValueScaled) {
+        showTemporaryError('qualityCheckStatus', "Please fill in all fields");
+        return;
+      }
+
+      try {
+        document.getElementById('qualityCheckStatus').innerHTML = `
+          <div class="status-message">
+            Checking batch status...
+          </div>
+        `;
+
+        const batch = await contract.getBatch(batchId);
+        if (!batch || !batch.harvesting) {
+          throw new Error('Batch does not exist');
+        }
+
+        document.getElementById('qualityCheckStatus').innerHTML = `
+          <div class="status-message">
+            Processing transaction...
+          </div>
+        `;
+
+        acidityScaled = Math.round(parseFloat(acidityScaled) * 10);
+        peroxideValueScaled = Math.round(parseFloat(peroxideValueScaled) * 10);
+
+        const tx = await contract.logQualityCheck(
+          batchId,
+          onhId,
+          lab,
+          acidityScaled,
+          quality,
+          area,
+          peroxideValueScaled,
+          certifiedOrganic,
+          { gasLimit: 500000 }
+        );
+        
+        document.getElementById('qualityCheckStatus').innerHTML = `
+          <div class="status-message">
+            Transaction sent, waiting for confirmation...
+          </div>
+        `;
+
+        await tx.wait();
+        
+        document.getElementById('qualityCheckStatus').innerHTML = `
+          <div class="status-message status-success">
+            Quality check logged successfully!
+          </div>
+        `;
+
+        document.getElementById('batchIdQuality').value = '';
+        document.getElementById('labQuality').value = '';
+        document.getElementById('acidityQuality').value = '';
+        document.getElementById('qualityQuality').value = '';
+        document.getElementById('areaQuality').value = '';
+        document.getElementById('peroxideQuality').value = '';
+        document.getElementById('certifiedOrganicQuality').checked = false;
+
+        document.getElementById('viewMyBatchesBtn').click();
+        
+        setTimeout(() => {
+          document.getElementById('qualityCheckStatus').innerHTML = '';
+        }, 5000);
+        
+      } catch (err) {
+        console.error("Full error:", err);
+        let errorMessage = err.reason || err.data?.message || err.message;
+        showTemporaryError('qualityCheckStatus', errorMessage);
+      }
+    });
+
+    window.loadBatchDetails = async function(batchId) {
+      const detailsDiv = document.getElementById(`batch-${batchId}-details`);
+      try {
+        detailsDiv.innerHTML = `
+          <div class="loading-spinner" style="width:1rem;height:1rem;"></div>
+          <p>Loading details...</p>
+        `;
+        detailsDiv.style.display = 'block';
+        
+        const batch = await contract.getBatch(batchId);
+        if (!batch || !batch.harvesting) {
+          throw new Error('Batch details not available');
+        }
+        displayBatchDetails(batchId, batch, detailsDiv);
+      } catch (err) {
+        console.error(err);
+        detailsDiv.innerHTML = `
+          <div class="status-message status-error">
+            Error: ${err.reason || err.message || 'Failed to load details'}
+          </div>
+        `;
+        setTimeout(() => {
+          detailsDiv.innerHTML = '';
+          detailsDiv.style.display = 'none';
+        }, 5000);
+      }
+    };
+
+    function displayBatchDetails(batchId, batch, container) {
+      const containerElement = typeof container === 'string' ?
+        document.getElementById(container) : container;
+    
+      const isValid = (value, isNumber = false) => {
+        if (isNumber) {
+          try {
+            if (value === undefined || value === null) return false;
+            if (typeof value === 'number') return true;
+            if (typeof value.gt === 'function') return true;
+            return false;
+          } catch {
+            return false;
+          }
+        }
+        return value !== undefined && value !== null && value.toString().trim() !== '';
+      };
+    
+      const addField = (label, value, isNumber = false, suffix = '') => {
+        if (isValid(value, isNumber)) {
+          let displayValue = value;
+          if (isNumber && label === 'Quantity') {
+            displayValue = (typeof value === 'number' ? value : value.toString()) / 1000;
+            displayValue = Number(displayValue.toFixed(2));
+          } else if (isNumber && label === 'Duration') {
+            displayValue = (typeof value === 'number' ? value : value.toString()) / 10;
+            displayValue = Number(displayValue.toFixed(1));
+            suffix = displayValue === 1 ? ' hour' : ' hours';
+          } else if (isNumber && (label === 'Temperature' || label === 'Humidity')) {
+            displayValue = (typeof value === 'number' ? value : value.toString()) / 10;
+            displayValue = Number(displayValue.toFixed(1));
+          } else if (isNumber && (label === 'Acidity' || label === 'Peroxide Value')) {
+            displayValue = (typeof value === 'number' ? value : value.toString()) / 10;
+            displayValue = Number(displayValue.toFixed(1));
+          } else if (isNumber) {
+            displayValue = typeof value === 'number' ? value : value.toString();
+          }
+          return `<p><strong>${label}:</strong> ${displayValue}${suffix}</p>`;
+        }
+        return '';
+      };
+    
+      const addSection = (title, content) => {
+        if (content.trim()) {
+          return `
+            <h4>${title}</h4>
+            ${content}
+          `;
+        }
+        return '';
+      };
+    
+      let harvestingContent = '';
+      harvestingContent += addField('Farmer', batch.harvesting.farmer);
+      harvestingContent += addField('Harvest Date', batch.harvesting.date);
+      harvestingContent += addField('Location', batch.harvesting.location);
+      harvestingContent += addField('Method', batch.harvesting.method);
+      harvestingContent += addField('Quantity', batch.harvesting.quantity, true, ' kg');
+      harvestingContent += addField('Variety', batch.harvesting.variety);
+    
+      let transportationContent = '';
+      transportationContent += addField('Transporter ID', batch.transportation.transporterId);
+      transportationContent += addField('Duration', batch.transportation.duration, true);
+      transportationContent += addField('Conditions', batch.transportation.conditions);
+      transportationContent += addField('Vehicle Type', batch.transportation.vehicleType);
+    
+      let storageBeforeContent = '';
+      storageBeforeContent += addField('Pressing Facility ID', batch.storageBeforePressing.pressingId);
+      storageBeforeContent += addField('Duration', batch.storageBeforePressing.duration, true);
+      storageBeforeContent += addField('Conditions', batch.storageBeforePressing.conditions);
+      storageBeforeContent += addField('Temperature', batch.storageBeforePressing.temperature, true, '°C');
+      storageBeforeContent += addField('Humidity', batch.storageBeforePressing.humidity, true, '%');
+      storageBeforeContent += addField('Good Olives', batch.storageBeforePressing.goodOlives, true);
+      storageBeforeContent += addField('Bad Olives', batch.storageBeforePressing.badOlives, true);
+    
+      let pressingContent = '';
+      pressingContent += addField('Pressing Date', batch.pressingProcess.date);
+      pressingContent += addField('Pressing Facility ID', batch.pressingProcess.pressingId);
+      pressingContent += addField('Facility', batch.pressingProcess.facility);
+      pressingContent += addField('Method', batch.pressingProcess.method);
+      pressingContent += addField('Conditions', batch.pressingProcess.conditions);
+      pressingContent += addField('Temperature', batch.pressingProcess.temperature, true, '°C');
+      pressingContent += addField('Pressure', batch.pressingProcess.pressure, true, ' bar');
+      pressingContent += addField('Operator', batch.pressingProcess.operatorName);
+    
+      let storageAfterContent = '';
+      storageAfterContent += addField('Tank ID', batch.storageAfterPressing.tankId);
+      storageAfterContent += addField('Pressing Facility ID', batch.storageAfterPressing.pressingId);
+      storageAfterContent += addField('Duration', batch.storageAfterPressing.duration, true);
+      storageAfterContent += addField('Conditions', batch.storageAfterPressing.conditions);
+      storageAfterContent += addField('Temperature', batch.storageAfterPressing.temperature, true, '°C');
+      storageAfterContent += addField('Humidity', batch.storageAfterPressing.humidity, true, '%');
+      storageAfterContent += `<p><strong>Inert Atmosphere:</strong> ${batch.storageAfterPressing.inertAtmosphere ? 'Yes' : 'No'}</p>`;
+    
+      let qualityCheckContent = '';
+      qualityCheckContent += addField('Lab', batch.qualityCheck.lab);
+      qualityCheckContent += addField('ONH ID', batch.qualityCheck.onhId);
+      qualityCheckContent += addField('Acidity', batch.qualityCheck.acidity, true, '%');
+      qualityCheckContent += addField('Quality', batch.qualityCheck.quality);
+      qualityCheckContent += addField('Area', batch.qualityCheck.area);
+      qualityCheckContent += addField('Peroxide Value', batch.qualityCheck.peroxideValue, true, ' meq/kg');
+      qualityCheckContent += `<p><strong>Certified Organic:</strong> ${batch.qualityCheck.certifiedOrganic ? 'Yes' : 'No'}</p>`;
+    
+      const statusContent = `<p><strong>Status:</strong> ${batch.isFinalized ? '✅ Finalized' : '❌ Not Finalized'}</p>`;
+    
+      const html = `
+        <div class="batch-details">
+          <h4>Batch ${batchId} Details</h4>
+          ${addSection('Harvesting Details', harvestingContent)}
+          ${addSection('Transportation Details', transportationContent)}
+          ${addSection('Pre-Pressing Storage', storageBeforeContent)}
+          ${addSection('Pressing Process', pressingContent)}
+          ${addSection('Post-Pressing Storage', storageAfterContent)}
+          ${addSection('Quality Check', qualityCheckContent)}
+          ${statusContent}
+        </div>
+      `;
+    
+      containerElement.innerHTML = html;
+    }
+
+    window.addEventListener('load', init);
+  </script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Olive Oil Traceability - Login</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f4f4f9;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+
+    #wallet-connection {
+      background-color: #ffffff;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    #connectButton {
+      background-color: #1abc9c;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    #connectButton:hover {
+      background-color: #16a085;
+    }
+
+    #status {
+      margin-top: 20px;
+      color: #e74c3c;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>Login to Olive Oil Traceability System</h1>
+  <div id="wallet-connection">
+    <button id="connectButton">Connect MetaMask</button>
+  </div>
+  <p id="status"></p>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+  <script>
+    const ADMIN_ADDRESS = "0xb83AAbF4a4679A86f988837Ca87be8dd05390698".toLowerCase();
+    const FARMER_ADDRESS = "0x013e8AaE064294cf146d5743076e8f11CF4489F9".toLowerCase();
+    const TRANS_ADDRESS = "0x06Fdc58AF6750D6180F11EA31cD9eA077b19aCb7".toLowerCase();
+    const PRESS_ADDRESS = "0xf91aCf0Fb5384945c2F82f404f7f5C1856f779cA".toLowerCase();
+    const ONH_ADDRESS ="0x25A1d99D5810568D9582dBF764200D499D65D5fd".toLowerCase();
+    const contractAddress = "0xA7cf92E595D1584C0fdCaDB87Ee48a39d8a65bc9";
+    const contractABI = []; // Optional: only needed if you call contract functions
+
+    let provider;
+    let signer;
+    let contract;
+
+    document.getElementById("connectButton").addEventListener("click", async () => {
+      if (window.ethereum) {
+        try {
+          provider = new ethers.providers.Web3Provider(window.ethereum);
+          await provider.send("eth_requestAccounts", []);
+          signer = provider.getSigner();
+          const userAddress = (await signer.getAddress()).toLowerCase();
+
+          contract = new ethers.Contract(contractAddress, contractABI, signer);
+
+          console.log("Connected address:", userAddress);
+
+          if (userAddress === ADMIN_ADDRESS) {
+            window.location.href = "admin.html";
+          } else if (userAddress === FARMER_ADDRESS) {
+            window.location.href = "farmer22.html";
+          } else if (userAddress === TRANS_ADDRESS) {
+            window.location.href = "transporter22.html";
+          } else if (userAddress === PRESS_ADDRESS) {
+            window.location.href = "logStorageBeforePressing.html";
+          }
+          else if (userAddress === ONH_ADDRESS) {
+            window.location.href = "qualitycheck.html";
+          }
+          else {
+             window.location.href = "indexcl.html";
+            //document.getElementById("status").textContent = "Unauthorized wallet address!";
+          }
+
+        } catch (err) {
+          console.error(err);
+          document.getElementById("status").textContent = "MetaMask connection failed.";
+        }
+      } else {
+        alert("MetaMask is not installed!");
+      }
+    });
+  </script>
+</body>
+</html>

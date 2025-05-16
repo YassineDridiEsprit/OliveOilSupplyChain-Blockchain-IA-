@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Log Quality Check - AgriCulture Bootstrap Template</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+
+    <!-- Favicons -->
+    <link href="assets/img/favicon.png" rel="icon">
+    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Marcellus:wght@400&display=swap" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+    <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+
+    <!-- Main CSS File -->
+    <link href="assets/css/main.css" rel="stylesheet">
+
+    <!-- Inline CSS for nav spacing and modal -->
+    <style>
+        .navmenu ul li {
+            margin-right: 25px;
+        }
+        .navmenu ul li:last-child {
+            margin-right: 30px;
+        }
+        .prediction-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .prediction-modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90%;
+            overflow-y: auto;
+        }
+        .prediction-modal-content h3 {
+            color: #1e3a5f;
+            margin-bottom: 1rem;
+        }
+        .prediction-modal-content .form-control {
+            margin-bottom: 1rem;
+        }
+        .prediction-modal-content .btn-primary {
+            width: 100%;
+            background-color: #10b981;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 6px;
+        }
+        .prediction-modal-content .btn-primary:hover {
+            background-color: #059669;
+        }
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            color: #4b5563;
+            font-size: 28px;
+            cursor: pointer;
+        }
+        .btn-secondary {
+            background-color: #6b7280;
+            border: none;
+            transition: background-color 0.2s;
+        }
+        .btn-secondary:hover {
+            background-color: #4b5563;
+        }
+        @media (max-width: 768px) {
+            .row.mt-3 .col-md-6 {
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+
+    <!-- Vendor JS Files -->
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body class="contact-page">
+
+    <header id="header" class="header d-flex align-items-center position-relative">
+        <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
+            <a href="index4.html" class="logo d-flex align-items-center">
+                <img src="assets/img/logo.png" alt="AgriCulture">
+            </a>
+            <nav id="navmenu" class="navmenu">
+                <ul>
+                    <li><a href="index4.html">Home</a></li>
+                    <li class="dropdown"><a href="#"><span>BlockChain System</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+                        <ul>
+                            <li><a href="loadbatchesquality.html">Load My Batches</a></li>
+                            <li><a href="batchefindquality.html">View a Batch</a></li>
+                            <li><a href="qualitycheck.html" class="active">Log Quality Check</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="about.html">About Us</a></li>
+                </ul>
+                <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+            </nav>
+            <div class="dropdown ms-3">
+                <a href="#" class="d-flex align-items-center" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-person-circle fs-4"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="login.html">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+
+        <div class="page-title dark-background" data-aos="fade" style="background-image: url(assets/img/page-title-bg.webp);">
+            <div class="container position-relative">
+                <h1>Log Quality Check</h1>
+                <p>Record quality check details for an olive oil batch to ensure transparency and compliance.</p>
+                <nav class="breadcrumbs">
+                    <ol>
+                        <li><a href="index.html">Home</a></li>
+                        <li class="current">Log Quality Check</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+        <section id="contact" class="contact section">
+            <div class="mb-5">
+                <iframe style="width: 100%; height: 400px;" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d205746.7997744474!2d10.014434936306714!3d36.81853240032598!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12fd337f5e7ef543%3A0x45d2b53871cf0db3!2sTunis!5e1!3m2!1sfr!2stn!4v1746864751388!5m2!1sfr!2stn" frameborder="0" allowfullscreen=""></iframe>
+            </div>
+            <div class="container section-title" data-aos="fade-up">
+                <h2>Log Quality Check</h2>
+                <p>Ensuring Quality and Transparency in Olive Oil Production</p>
+            </div>
+
+            <div class="container" data-aos="fade">
+                <div class="row gy-5 gx-lg-5">
+                    <div class="col-lg-4">
+                        <div class="info">
+                            <h3>Importance of Quality Checks</h3>
+                            <p>Quality checks ensure the integrity and excellence of olive oil throughout the supply chain.</p>
+                            <div class="info-item d-flex">
+                                <i class="bi bi-shield-check"></i>
+                                <div>
+                                    <h4>Quality Assurance:</h4>
+                                    <p>Verifies acidity, peroxide value, and other parameters to meet industry standards.</p>
+                                </div>
+                            </div>
+                            <div class="info-item d-flex">
+                                <i class="bi bi-hand-thumbs-up"></i>
+                                <div>
+                                    <h4>Consumer Confidence:</h4>
+                                    <p>Provides verified data on quality and origin, building trust with consumers.</p>
+                                </div>
+                            </div>
+                            <div class="info-item d-flex">
+                                <i class="bi bi-clipboard-check"></i>
+                                <div>
+                                    <h4>Regulatory Compliance:</h4>
+                                    <p>Ensures adherence to organic certification and quality regulations.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-8">
+                        <div class="mb-3">
+                            <p>Connected Account: <span id="connectedAccount"></span></p>
+                        </div>
+                        <!-- <div class="form-group mt-3">
+                            <input type="number" class="form-control" id="lookupBatchId" placeholder="Enter Batch ID to verify">
+                            <button type="button" class="btn btn-secondary mt-2" onclick="lookupBatch()">Verify Batch</button>
+                        </div> -->
+                        <div id="batchInfo" class="mt-2"></div>
+                        <form id="quality-check-form" class="php-email-form" action="#" method="post">
+                            <div class="form-group mt-3">
+                                <input type="number" class="form-control" id="batchIdQuality" placeholder="Batch ID" required>
+                            </div>
+                            <div class="form-group mt-3">
+                                <input type="text" class="form-control" id="onhIdQuality" placeholder="ONH ID (Wallet Address)" readonly required>
+                            </div>
+                            <div class="form-group mt-3">
+                                <input type="text" class="form-control" id="labQuality" placeholder="Lab Name" required>
+                            </div>
+                            <div class="form-group mt-3">
+                                <input type="number" class="form-control" id="acidityQuality" placeholder="Acidity (%)" step="0.1" required>
+                            </div>
+                            <div class="form-group mt-3">
+                                <input type="number" class="form-control" id="peroxideQuality" placeholder="Peroxide Value (meq/kg)" step="0.1" required>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-6 form-group d-flex align-items-stretch">
+                                    <input type="text" class="form-control" id="qualityQuality" placeholder="Quality" readonly required>
+                                    <button type="button" class="btn btn-secondary px-4 rounded-0 rounded-end" onclick="openPredictionModal('quality')">Predict</button>
+                                </div>
+                                <div class="col-md-6 form-group d-flex align-items-stretch">
+                                    <input type="text" class="form-control" id="areaQuality" placeholder="Area" readonly required>
+                                    <button type="button" class="btn btn-secondary px-4 rounded-0 rounded-end" onclick="openPredictionModal('area')">Predict</button>
+                                </div>
+                            </div>
+                            <div class="form-group mt-3">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="certifiedOrganicQuality">
+                                    <label class="form-check-label" for="certifiedOrganicQuality">Certified Organic</label>
+                                </div>
+                            </div>
+                            <div class="my-3">
+                                <div class="loading">Loading</div>
+                                <div class="error-message"></div>
+                                <div class="sent-message">Quality check logged successfully!</div>
+                            </div>
+                            <div class="text-center mt-3">
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Prediction Modal for Quality and Area -->
+        <div id="predictionModal" class="prediction-modal">
+            <span class="close-modal">×</span>
+            <div class="prediction-modal-content">
+                <h3>Predict <span id="predictionField"></span></h3>
+                <div id="areaFields" style="display: none;">
+                    <label>Palmitic (%):</label>
+                    <input type="number" id="palmiticInput" step="0.1" placeholder="e.g., 12.5" class="form-control">
+                    <label>Palmitoleic (%):</label>
+                    <input type="number" id="palmitoleicInput" step="0.1" placeholder="e.g., 1.2" class="form-control">
+                    <label>Stearic (%):</label>
+                    <input type="number" id="stearicInput" step="0.1" placeholder="e.g., 2.5" class="form-control">
+                    <label>Oleic (%):</label>
+                    <input type="number" id="oleicInput" step="0.1" placeholder="e.g., 70.0" class="form-control">
+                    <label>Linoleic (%):</label>
+                    <input type="number" id="linoleicInput" step="0.1" placeholder="e.g., 10.0" class="form-control">
+                    <label>Linolenic (%):</label>
+                    <input type="number" id="linolenicInput" step="0.1" placeholder="e.g., 0.8" class="form-control">
+                    <label>Arachidic (%):</label>
+                    <input type="number" id="arachidicInput" step="0.1" placeholder="e.g., 0.4" class="form-control">
+                    <label>Eicosenoic (%):</label>
+                    <input type="number" id="eicosenoicInput" step="0.1" placeholder="e.g., 0.3" class="form-control">
+                </div>
+                <div id="qualityFields" style="display: none;">
+                    <label>FAEES:</label>
+                    <input type="number" id="faeesInput" step="0.1" placeholder="e.g., 4.5" class="form-control">
+                    <label>K232:</label>
+                    <input type="number" id="k232Input" step="0.1" placeholder="e.g., 1.9" class="form-control">
+                    <label>K270:</label>
+                    <input type="number" id="k270Input" step="0.1" placeholder="e.g., 0.17" class="form-control">
+                    <label>Acidity (%):</label>
+                    <input type="number" id="acidityInput" step="0.1" placeholder="e.g., 1.3" class="form-control">
+                    <label>Peroxide Index (meq/kg):</label>
+                    <input type="number" id="peroxideIndexInput" step="0.1" placeholder="e.g., 6.7" class="form-control">
+                </div>
+                <button type="button" class="btn btn-primary" onclick="submitPrediction()">Submit Prediction</button>
+            </div>
+        </div>
+    </main>
+
+    <footer id="footer" class="footer dark-background">
+        <div class="footer-top">
+            <div class="container">
+                <div class="row gy-4">
+                    <div class="col-lg-4 col-md-6 footer-about">
+                        <a href="index.html" class="logo d-flex align-items-center">
+                            <span class="sitename">AgriCulture</span>
+                        </a>
+                        <div class="footer-contact pt-3">
+                            <p>A108 Adam Street</p>
+                            <p>New York, NY 535022</p>
+                            <p class="mt-3"><strong>Phone:</strong> <span>+1 5589 55488 55</span></p>
+                            <p><strong>Email:</strong> <span>info@example.com</span></p>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-3 footer-links">
+                        <h4>Useful Links</h4>
+                        <ul>
+                            <li><a href="#">Home</a></li>
+                            <li><a href="#">About us</a></li>
+                            <li><a href="#">Services</a></li>
+                            <li><a href="#">Terms of service</a></li>
+                            <li><a href="#">Privacy policy</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-2 col-md-3 footer-links">
+                        <h4>Our Services</h4>
+                        <ul>
+                            <li><a href="#">Web Design</a></li>
+                            <li><a href="#">Web Development</a></li>
+                            <li><a href="#">Product Management</a></li>
+                            <li><a href="#">Marketing</a></li>
+                            <li><a href="#">Graphic Design</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-2 col-md-3 footer-links">
+                        <h4>Hic solutasetp</h4>
+                        <ul>
+                            <li><a href="#">Molestiae accusamus iure</a></li>
+                            <li><a href="#">Excepturi dignissimos</a></li>
+                            <li><a href="#">Suscipit distinctio</a></li>
+                            <li><a href="#">Dilecta</a></li>
+                            <li><a href="#">Sit quas consectetur</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-2 col-md-3 footer-links">
+                        <h4>Nobis illum</h4>
+                        <ul>
+                            <li><a href="#">Ipsam</a></li>
+                            <li><a href="#">Laudantium dolorum</a></li>
+                            <li><a href="#">Dinera</a></li>
+                            <li><a href="#">Trodelas</a></li>
+                            <li><a href="#">Flexo</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="copyright text-center">
+            <div class="container d-flex flex-column flex-lg-row justify-content-center justify-content-lg-between align-items-center">
+                <div class="d-flex flex-column align-items-center align-items-lg-start">
+                    <div>
+                        © Copyright <strong><span>MyWebsite</span></strong>. All Rights Reserved
+                    </div>
+                    <div class="credits">
+                        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a> Distributed by <a href="https://themewagon.com">ThemeWagon</a>
+                    </div>
+                </div>
+                <div class="social-links order-first order-lg-last mb-3 mb-lg-0">
+                    <a href=""><i class="bi bi-twitter-x"></i></a>
+                    <a href=""><i class="bi bi-facebook"></i></a>
+                    <a href=""><i class="bi bi-instagram"></i></a>
+                    <a href=""><i class="bi bi-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+    <div id="preloader"></div>
+
+    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/vendor/aos/aos.js"></script>
+    <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+    <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+    <script src="assets/js/main.js"></script>
+
+    <script>
+        const contractAddress = '0xA7cf92E595D1584C0fdCaDB87Ee48a39d8a65bc9';
+        const contractABI = [
+            {
+                "inputs": [
+                    { "internalType": "uint256", "name": "batchId", "type": "uint256" }
+                ],
+                "name": "getBatch",
+                "outputs": [
+                    {
+                        "components": [
+                            {
+                                "components": [
+                                    { "internalType": "string", "name": "farmer", "type": "string" },
+                                    { "internalType": "string", "name": "date", "type": "string" },
+                                    { "internalType": "string", "name": "location", "type": "string" },
+                                    { "internalType": "string", "name": "method", "type": "string" },
+                                    { "internalType": "uint256", "name": "quantity", "type": "uint256" },
+                                    { "internalType": "string", "name": "variety", "type": "string" }
+                                ],
+                                "internalType": "struct SupplyChain.Harvesting",
+                                "name": "harvesting",
+                                "type": "tuple"
+                            },
+                            {
+                                "components": [
+                                    { "internalType": "uint256", "name": "duration", "type": "uint256" },
+                                    { "internalType": "string", "name": "conditions", "type": "string" },
+                                    { "internalType": "string", "name": "transporterId", "type": "string" },
+                                    { "internalType": "string", "name": "vehicleType", "type": "string" }
+                                ],
+                                "internalType": "struct SupplyChain.Transportation",
+                                "name": "transportation",
+                                "type": "tuple"
+                            },
+                            {
+                                "components": [
+                                    { "internalType": "uint256", "name": "duration", "type": "uint256" },
+                                    { "internalType": "string", "name": "pressingId", "type": "string" },
+                                    { "internalType": "string", "name": "conditions", "type": "string" },
+                                    { "internalType": "uint256", "name": "temperature", "type": "uint256" },
+                                    { "internalType": "uint256", "name": "humidity", "type": "uint256" },
+                                    { "internalType": "uint256", "name": "goodOlives", "type": "uint256" },
+                                    { "internalType": "uint256", "name": "badOlives", "type": "uint256" }
+                                ],
+                                "internalType": "struct SupplyChain.StorageBeforePressing",
+                                "name": "storageBeforePressing",
+                                "type": "tuple"
+                            },
+                            {
+                                "components": [
+                                    { "internalType": "string", "name": "date", "type": "string" },
+                                    { "internalType": "string", "name": "pressingId", "type": "string" },
+                                    { "internalType": "string", "name": "facility", "type": "string" },
+                                    { "internalType": "string", "name": "method", "type": "string" },
+                                    { "internalType": "string", "name": "conditions", "type": "string" },
+                                    { "internalType": "uint256", "name": "temperature", "type": "uint256" },
+                                    { "internalType": "uint256", "name": "pressure", "type": "uint256" },
+                                    { "internalType": "string", "name": "operatorName", "type": "string" }
+                                ],
+                                "internalType": "struct SupplyChain.PressingProcess",
+                                "name": "pressingProcess",
+                                "type": "tuple"
+                            },
+                            {
+                                "components": [
+                                    { "internalType": "string", "name": "tankId", "type": "string" },
+                                    { "internalType": "string", "name": "pressingId", "type": "string" },
+                                    { "internalType": "uint256", "name": "duration", "type": "uint256" },
+                                    { "internalType": "string", "name": "conditions", "type": "string" },
+                                    { "internalType": "uint256", "name": "temperature", "type": "uint256" },
+                                    { "internalType": "uint256", "name": "humidity", "type": "uint256" },
+                                    { "internalType": "bool", "name": "inertAtmosphere", "type": "bool" }
+                                ],
+                                "internalType": "struct SupplyChain.StorageAfterPressing",
+                                "name": "storageAfterPressing",
+                                "type": "tuple"
+                            },
+                            {
+                                "components": [
+                                    { "internalType": "string", "name": "lab", "type": "string" },
+                                    { "internalType": "string", "name": "onhId", "type": "string" },
+                                    { "internalType": "uint256", "name": "acidity", "type": "uint256" },
+                                    { "internalType": "string", "name": "quality", "type": "string" },
+                                    { "internalType": "string", "name": "area", "type": "string" },
+                                    { "internalType": "uint256", "name": "peroxideValue", "type": "uint256" },
+                                    { "internalType": "bool", "name": "certifiedOrganic", "type": "bool" }
+                                ],
+                                "internalType": "struct SupplyChain.QualityCheck",
+                                "name": "qualityCheck",
+                                "type": "tuple"
+                            },
+                            { "internalType": "bool", "name": "isFinalized", "type": "bool" }
+                        ],
+                        "internalType": "struct SupplyChain.Batch",
+                        "name": "",
+                        "type": "tuple"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    { "internalType": "uint256", "name": "batchId", "type": "uint256" },
+                    { "internalType": "string", "name": "onhId", "type": "string" },
+                    { "internalType": "string", "name": "lab", "type": "string" },
+                    { "internalType": "uint256", "name": "acidityScaled", "type": "uint256" },
+                    { "internalType": "string", "name": "quality", "type": "string" },
+                    { "internalType": "string", "name": "area", "type": "string" },
+                    { "internalType": "uint256", "name": "peroxideValueScaled", "type": "uint256" },
+                    { "internalType": "bool", "name": "certifiedOrganic", "type": "bool" }
+                ],
+                "name": "logQualityCheck",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            }
+        ];
+
+        let provider, signer, contract, currentAccount;
+        let messageTimeout = null;
+        let currentPredictionField = '';
+
+        function toChecksumAddress(address) {
+            return ethers.utils.getAddress(address.toLowerCase());
+        }
+
+        function showStatusMessage(message, type = 'error') {
+            console.log(`Displaying ${type} message: ${message}`);
+            const messageDiv = document.querySelector('.my-3');
+            if (!messageDiv) {
+                console.error("Error: .my-3 div not found");
+                return;
+            }
+            const errorMessage = messageDiv.querySelector('.error-message');
+            const sentMessage = messageDiv.querySelector('.sent-message');
+
+            if (messageTimeout) {
+                clearTimeout(messageTimeout);
+            }
+
+            if (errorMessage) errorMessage.style.display = 'none';
+            if (sentMessage) sentMessage.style.display = 'none';
+            if (errorMessage) errorMessage.textContent = '';
+            if (sentMessage) sentMessage.textContent = '';
+
+            if (type === 'success' && sentMessage) {
+                sentMessage.textContent = message;
+                sentMessage.style.display = 'block';
+            } else if (errorMessage) {
+                errorMessage.textContent = message;
+                errorMessage.style.display = 'block';
+            }
+
+            messageTimeout = setTimeout(() => {
+                if (errorMessage) errorMessage.style.display = 'none';
+                if (sentMessage) sentMessage.style.display = 'none';
+                console.log(`Hid message: ${message}`);
+            }, 5000);
+        }
+
+        async function init() {
+            if (!window.ethereum) {
+                showStatusMessage("Please install MetaMask to use this application!");
+                return;
+            }
+
+            try {
+                provider = new ethers.providers.Web3Provider(window.ethereum);
+                const accounts = await provider.send("eth_requestAccounts", []);
+                if (accounts.length === 0) {
+                    console.log("No accounts connected on initial load; waiting for user to connect via MetaMask.");
+                    return;
+                }
+                signer = provider.getSigner();
+                contract = new ethers.Contract(contractAddress, contractABI, signer);
+                currentAccount = await signer.getAddress();
+                const checksumAddress = toChecksumAddress(currentAccount);
+                document.getElementById('connectedAccount').textContent = checksumAddress;
+                document.getElementById('onhIdQuality').value = checksumAddress;
+                console.log("Initialized with account:", checksumAddress);
+
+                window.ethereum.on('accountsChanged', async (accounts) => {
+                    if (accounts.length > 0) {
+                        currentAccount = accounts[0];
+                        const newChecksumAddress = toChecksumAddress(currentAccount);
+                        document.getElementById('connectedAccount').textContent = newChecksumAddress;
+                        document.getElementById('onhIdQuality').value = newChecksumAddress;
+                        console.log("Switched to account:", newChecksumAddress);
+                    } else {
+                        showStatusMessage("No account connected. Please reconnect MetaMask.");
+                        document.getElementById('connectedAccount').textContent = '';
+                        document.getElementById('onhIdQuality').value = '';
+                    }
+                });
+
+                setupModalClose();
+            } catch (error) {
+                console.error("Error connecting:", error);
+                showStatusMessage("Error connecting to Ethereum: " + error.message);
+            }
+        }
+
+        function resetForm() {
+            console.log("Attempting to reset form");
+            const form = document.getElementById('quality-check-form');
+            if (form) {
+                form.reset();
+                document.getElementById('onhIdQuality').value = currentAccount ? toChecksumAddress(currentAccount) : '';
+                console.log("Form reset completed");
+            } else {
+                console.log("Error: Form element not found");
+            }
+        }
+
+        function setupModalClose() {
+            const closeButtons = document.querySelectorAll('.close-modal');
+            closeButtons.forEach(button => {
+                button.onclick = () => {
+                    const modal = button.closest('.prediction-modal');
+                    if (modal) modal.style.display = 'none';
+                };
+            });
+
+            window.addEventListener('click', function(event) {
+                if (event.target.id === 'predictionModal') {
+                    document.getElementById('predictionModal').style.display = 'none';
+                }
+            });
+        }
+
+        async function lookupBatch() {
+            const batchId = document.getElementById('lookupBatchId').value.trim();
+            if (!batchId || isNaN(batchId) || parseInt(batchId) <= 0) {
+                showStatusMessage("Please enter a valid Batch ID.");
+                return;
+            }
+            try {
+                const batch = await contract.getBatch(batchId);
+                console.log("Batch data:", batch);
+                if (batch.harvesting.quantity > 0) {
+                    document.getElementById('batchInfo').innerHTML = `<p>Batch ${batchId} exists. Farmer: ${batch.harvesting.farmer}, Quantity: ${batch.harvesting.quantity / 1000} kg</p>`;
+                    showStatusMessage(`Batch ${batchId} found!`, 'success');
+                } else {
+                    showStatusMessage("Batch does not exist.");
+                }
+            } catch (err) {
+                console.error("Error looking up batch:", err);
+                showStatusMessage("Error verifying batch: " + (err.reason || err.message || "Unknown error"));
+            }
+        }
+
+        function openPredictionModal(field) {
+            currentPredictionField = field;
+            document.getElementById('predictionField').textContent = field.charAt(0).toUpperCase() + field.slice(1);
+            
+            if (field === 'quality') {
+                document.getElementById('qualityFields').style.display = 'block';
+                document.getElementById('areaFields').style.display = 'none';
+                document.getElementById('faeesInput').value = '';
+                document.getElementById('k232Input').value = '';
+                document.getElementById('k270Input').value = '';
+                document.getElementById('acidityInput').value = '';
+                document.getElementById('peroxideIndexInput').value = '';
+            } else if (field === 'area') {
+                document.getElementById('areaFields').style.display = 'block';
+                document.getElementById('qualityFields').style.display = 'none';
+                document.getElementById('palmiticInput').value = '';
+                document.getElementById('palmitoleicInput').value = '';
+                document.getElementById('stearicInput').value = '';
+                document.getElementById('oleicInput').value = '';
+                document.getElementById('linoleicInput').value = '';
+                document.getElementById('linolenicInput').value = '';
+                document.getElementById('arachidicInput').value = '';
+                document.getElementById('eicosenoicInput').value = '';
+            }
+            
+            document.getElementById('predictionModal').style.display = 'flex';
+        }
+
+        function submitPrediction() {
+            let features, url;
+            
+            if (currentPredictionField === 'area') {
+                features = {
+                    palmitic: parseFloat(document.getElementById('palmiticInput').value),
+                    palmitoleic: parseFloat(document.getElementById('palmitoleicInput').value),
+                    stearic: parseFloat(document.getElementById('stearicInput').value),
+                    oleic: parseFloat(document.getElementById('oleicInput').value),
+                    linoleic: parseFloat(document.getElementById('linoleicInput').value),
+                    linolenic: parseFloat(document.getElementById('linolenicInput').value),
+                    arachidic: parseFloat(document.getElementById('arachidicInput').value),
+                    eicosenoic: parseFloat(document.getElementById('eicosenoicInput').value)
+                };
+                url = 'http://127.0.0.1:8000/predict';
+            } else if (currentPredictionField === 'quality') {
+                features = {
+                    FAEES: parseFloat(document.getElementById('faeesInput').value),
+                    K232: parseFloat(document.getElementById('k232Input').value),
+                    K270: parseFloat(document.getElementById('k270Input').value),
+                    Acidity: parseFloat(document.getElementById('acidityInput').value),
+                    Peroxide_Index: parseFloat(document.getElementById('peroxideIndexInput').value)
+                };
+                url = 'http://127.0.0.1:8000/predict2';
+            }
+
+            for (const [key, value] of Object.entries(features)) {
+                if (isNaN(value)) {
+                    showStatusMessage(`Please enter a valid number for ${key}`);
+                    return;
+                }
+            }
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(features),
+                success: function(response) {
+                    let prediction;
+                    if (currentPredictionField === 'area') {
+                        prediction = response.predicted_area;
+                        if (!prediction) {
+                            showStatusMessage('Invalid area prediction response');
+                            return;
+                        }
+                    } else if (currentPredictionField === 'quality') {
+                        prediction = response.predicted_quality;
+                        if (!prediction) {
+                            showStatusMessage('Invalid quality prediction response');
+                            return;
+                        }
+                    }
+                    document.getElementById(`${currentPredictionField}Quality`).value = prediction;
+                    showStatusMessage(`${currentPredictionField.charAt(0).toUpperCase() + currentPredictionField.slice(1)} predicted as: ${prediction}`, 'success');
+                    document.getElementById('predictionModal').style.display = 'none';
+                },
+                error: function(xhr, status, error) {
+                    console.error("Prediction error:", { status: xhr.status, statusText: xhr.statusText, error: error });
+                    showStatusMessage(`Error predicting ${currentPredictionField}: ${error}`);
+                }
+            });
+        }
+
+        $('#quality-check-form').submit(async function(event) {
+            event.preventDefault();
+            console.log("Form submission triggered");
+            if (!currentAccount) {
+                showStatusMessage("Please connect MetaMask to log a quality check.");
+                return;
+            }
+
+            const batchId = document.getElementById('batchIdQuality').value.trim();
+            const onhId = document.getElementById('onhIdQuality').value.trim();
+            const lab = document.getElementById('labQuality').value.trim();
+            const acidity = document.getElementById('acidityQuality').value.trim();
+            const peroxideValue = document.getElementById('peroxideQuality').value.trim();
+            const quality = document.getElementById('qualityQuality').value.trim();
+            const area = document.getElementById('areaQuality').value.trim();
+            const certifiedOrganic = document.getElementById('certifiedOrganicQuality').checked;
+
+            console.log("Form data:", { batchId, onhId, lab, acidity, peroxideValue, quality, area, certifiedOrganic });
+
+            if (!batchId || !onhId || !lab || !acidity || !peroxideValue || !quality || !area) {
+                showStatusMessage("All fields are required. Please fill in every field.");
+                return;
+            }
+
+            const batchIdNum = parseInt(batchId);
+            if (isNaN(batchIdNum) || batchIdNum <= 0) {
+                showStatusMessage("Batch ID must be a valid positive integer.");
+                return;
+            }
+
+            const acidityNum = parseFloat(acidity);
+            const peroxideNum = parseFloat(peroxideValue);
+            if (isNaN(acidityNum) || acidityNum < 0) {
+                showStatusMessage("Acidity must be a valid non-negative number.");
+                return;
+            }
+            if (isNaN(peroxideNum) || peroxideNum < 0) {
+                showStatusMessage("Peroxide Value must be a valid non-negative number.");
+                return;
+            }
+
+            try {
+                document.querySelector('.my-3 .loading').style.display = 'block';
+                showStatusMessage("Checking batch status...");
+
+                // Verify batch existence
+                const batch = await contract.getBatch(batchIdNum);
+                if (!batch || !batch.harvesting || batch.harvesting.quantity <= 0) {
+                    throw new Error('Batch does not exist');
+                }
+
+                showStatusMessage("Processing transaction...");
+
+                const acidityScaled = Math.round(acidityNum * 10);
+                const peroxideValueScaled = Math.round(peroxideNum * 10);
+
+                const tx = await contract.logQualityCheck(
+                    batchIdNum,
+                    onhId,
+                    lab,
+                    acidityScaled,
+                    quality,
+                    area,
+                    peroxideValueScaled,
+                    certifiedOrganic
+                );
+                
+                console.log("Transaction sent:", tx.hash);
+                document.querySelector('.my-3 .loading').style.display = 'none';
+                showStatusMessage("Transaction sent, waiting for confirmation...");
+
+                await tx.wait();
+
+                console.log("Transaction confirmed:", tx.hash);
+                showStatusMessage("Quality check logged successfully!", 'success');
+                resetForm();
+            } catch (err) {
+                console.error("Error in quality check logging:", err);
+                document.querySelector('.my-3 .loading').style.display = 'none';
+                let errorMessage = err.reason || err.data?.message || err.message || "Unknown error";
+                if (errorMessage.includes("Internal JSON-RPC error")) {
+                    errorMessage = "Transaction failed: Invalid batch ID or contract error. Please verify the Batch ID or network settings.";
+                }
+                showStatusMessage(`Error logging quality check: ${errorMessage}. Please verify the Batch ID or create a new batch in 'Create a Batch'.`);
+            }
+        });
+
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>

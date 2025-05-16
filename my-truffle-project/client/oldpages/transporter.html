@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Olive Oil Traceability - Transporter Portal</title>
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+  <style>
+    :root {
+      --primary-color: #5a7247;
+      --secondary-color: #8a9a5b;
+      --accent-color: #d4af37;
+      --light-bg: #f8f9fa;
+      --dark-text: #2c3e50;
+      --light-text: #f8f9fa;
+      --border-radius: 8px;
+      --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.6;
+      color: var(--dark-text);
+      background-color: var(--light-bg);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    h1, h2, h3 {
+      font-weight: 600;
+      color: var(--primary-color);
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      text-align: center;
+      padding-top: 1rem;
+      position: relative;
+    }
+
+    h1::after {
+      content: '';
+      display: block;
+      width: 100px;
+      height: 4px;
+      background: var(--accent-color);
+      margin: 0.5rem auto 1.5rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      padding: 2rem;
+      margin-bottom: 2rem;
+      transition: var(--transition);
+      border-left: 4px solid var(--primary-color);
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .batch-card {
+      background: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      border-left: 3px solid var(--secondary-color);
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    select {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      margin: 0.5rem 0 1.5rem;
+      border: 1px solid #ddd;
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+      transition: var(--transition);
+    }
+
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(90, 114, 71, 0.2);
+    }
+
+    button {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 500;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      transition: var(--transition);
+      margin: 0.5rem 0;
+      display: inline-block;
+    }
+
+    button:hover {
+      background-color: #3a5a20;
+      transform: translateY(-2px);
+    }
+
+    button:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 2rem;
+      height: 2rem;
+      border: 3px solid rgba(90, 114, 71, 0.3);
+      border-radius: 50%;
+      border-top-color: var(--primary-color);
+      animation: spin 1s ease-in-out infinite;
+      margin: 2rem auto;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .status-message {
+      padding: 1rem;
+      margin: 1rem 0;
+      border-radius: var(--border-radius);
+      transition: opacity 0.5s ease;
+    }
+
+    .status-success {
+      background-color: #e6f7e6;
+      color: #2e7d32;
+    }
+
+    .status-error {
+      background-color: #ffebee;
+      color: #c62828;
+    }
+
+    .status-warning {
+      background-color: #fff8e1;
+      color: #ff8f00;
+    }
+
+    .account-info {
+      background-color: #f0f7ed;
+      padding: 1rem;
+      border-radius: var(--border-radius);
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+    }
+
+    .batch-details {
+      margin-top: 1rem;
+      padding: 1rem;
+      background-color: #f9f9f9;
+      border-radius: var(--border-radius);
+    }
+
+    .batch-details h4 {
+      margin-bottom: 0.5rem;
+      color: var(--secondary-color);
+    }
+
+    .batch-details p {
+      margin-bottom: 0.5rem;
+    }
+
+    .fade-out {
+      opacity: 0;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 0 10px;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      h2 {
+        font-size: 1.5rem;
+      }
+      
+      .card {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Olive Oil Traceability System</h1>
+    <div class="account-info">
+      <p>Connected Account: <span id="connectedAccount"></span></p>
+    </div>
+
+    <div class="card">
+      <h2>View Batch by ID</h2>
+      <input type="number" id="batchIdInput" placeholder="Enter Batch ID">
+      <button id="viewBatchBtn">View Batch</button>
+      <div id="batchDetails"></div>
+    </div>
+
+    <div class="card">
+      <h2>My Transported Batches</h2>
+      <button id="viewMyBatchesBtn">View My Batches</button>
+      <div id="myBatches"></div>
+    </div>
+
+    <div class="card">
+      <h2>Log Transportation</h2>
+      <input type="number" id="transportBatchId" placeholder="Batch ID">
+      <input type="number" id="transportDuration" placeholder="Duration (hours)" step="0.1">
+      <input type="text" id="transportConditions" placeholder="Conditions">
+      <input type="text" id="vehicleType" placeholder="Vehicle Type">
+      <button id="logTransportBtn">Log Transportation</button>
+      <div id="transportStatus" class="status-message"></div>
+    </div>
+  </div>
+
+  <script>
+    const contractAddress = '0xA7cf92E595D1584C0fdCaDB87Ee48a39d8a65bc9';
+    const contractABI = [
+      {
+        "inputs": [{ "internalType": "uint256", "name": "batchId", "type": "uint256" }],
+        "name": "getBatch",
+        "outputs": [
+          {
+            "components": [
+              {
+                "components": [
+                  { "internalType": "string", "name": "farmer", "type": "string" },
+                  { "internalType": "string", "name": "date", "type": "string" },
+                  { "internalType": "string", "name": "location", "type": "string" },
+                  { "internalType": "string", "name": "method", "type": "string" },
+                  { "internalType": "uint256", "name": "quantity", "type": "uint256" },
+                  { "internalType": "string", "name": "variety", "type": "string" }
+                ],
+                "internalType": "struct Harvesting",
+                "name": "harvesting",
+                "type": "tuple"
+              },
+              {
+                "components": [
+                  { "internalType": "uint256", "name": "duration", "type": "uint256" },
+                  { "internalType": "string", "name": "conditions", "type": "string" },
+                  { "internalType": "string", "name": "transporterId", "type": "string" },
+                  { "internalType": "string", "name": "vehicleType", "type": "string" }
+                ],
+                "internalType": "struct Transportation",
+                "name": "transportation",
+                "type": "tuple"
+              },
+              {
+                "components": [
+                  { "internalType": "uint256", "name": "duration", "type": "uint256" },
+                  { "internalType": "string", "name": "pressingId", "type": "string" },
+                  { "internalType": "string", "name": "conditions", "type": "string" },
+                  { "internalType": "uint256", "name": "temperature", "type": "uint256" },
+                  { "internalType": "uint256", "name": "humidity", "type": "uint256" },
+                  { "internalType": "uint256", "name": "goodOlives", "type": "uint256" },
+                  { "internalType": "uint256", "name": "badOlives", "type": "uint256" }
+                ],
+                "internalType": "struct StorageBeforePressing",
+                "name": "storageBeforePressing",
+                "type": "tuple"
+              },
+              {
+                "components": [
+                  { "internalType": "string", "name": "date", "type": "string" },
+                  { "internalType": "string", "name": "pressingId", "type": "string" },
+                  { "internalType": "string", "name": "facility", "type": "string" },
+                  { "internalType": "string", "name": "method", "type": "string" },
+                  { "internalType": "string", "name": "conditions", "type": "string" },
+                  { "internalType": "uint256", "name": "temperature", "type": "uint256" },
+                  { "internalType": "uint256", "name": "pressure", "type": "uint256" },
+                  { "internalType": "string", "name": "operatorName", "type": "string" }
+                ],
+                "internalType": "struct PressingProcess",
+                "name": "pressingProcess",
+                "type": "tuple"
+              },
+              {
+                "components": [
+                  { "internalType": "string", "name": "tankId", "type": "string" },
+                  { "internalType": "string", "name": "pressingId", "type": "string" },
+                  { "internalType": "uint256", "name": "duration", "type": "uint256" },
+                  { "internalType": "string", "name": "conditions", "type": "string" },
+                  { "internalType": "uint256", "name": "temperature", "type": "uint256" },
+                  { "internalType": "uint256", "name": "humidity", "type": "uint256" },
+                  { "internalType": "bool", "name": "inertAtmosphere", "type": "bool" }
+                ],
+                "internalType": "struct StorageAfterPressing",
+                "name": "storageAfterPressing",
+                "type": "tuple"
+              },
+              {
+                "components": [
+                  { "internalType": "string", "name": "lab", "type": "string" },
+                  { "internalType": "string", "name": "onhId", "type": "string" },
+                  { "internalType": "uint256", "name": "acidity", "type": "uint256" },
+                  { "internalType": "string", "name": "quality", "type": "string" },
+                  { "internalType": "string", "name": "area", "type": "string" },
+                  { "internalType": "uint256", "name": "peroxideValue", "type": "uint256" },
+                  { "internalType": "bool", "name": "certifiedOrganic", "type": "bool" }
+                ],
+                "internalType": "struct QualityCheck",
+                "name": "qualityCheck",
+                "type": "tuple"
+              },
+              { "internalType": "bool", "name": "isFinalized", "type": "bool" }
+            ],
+            "internalType": "struct Batch",
+            "name": "",
+            "type": "tuple"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [{ "internalType": "string", "name": "transporterId", "type": "string" }],
+        "name": "getBatchesByTransporter",
+        "outputs": [{ "internalType": "uint256[]", "name": "", "type": "uint256[]" }],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          { "internalType": "uint256", "name": "batchId", "type": "uint256" },
+          { "internalType": "uint256", "name": "duration", "type": "uint256" },
+          { "internalType": "string", "name": "conditions", "type": "string" },
+          { "internalType": "string", "name": "transporterId", "type": "string" },
+          { "internalType": "string", "name": "vehicleType", "type": "string" }
+        ],
+        "name": "logTransportation",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      }
+    ];
+    
+    let provider, signer, contract, currentAccount;
+
+    // Helper function to convert address to checksum address string
+    function toChecksumAddress(address) {
+      return ethers.utils.getAddress(address.toLowerCase());
+    }
+
+    // Helper function to show temporary error message
+    function showTemporaryError(elementId, message) {
+      const element = document.getElementById(elementId);
+      element.innerHTML = `
+        <div class="status-message status-error">
+          ${message}
+        </div>
+      `;
+      setTimeout(() => {
+        element.classList.add('fade-out');
+        setTimeout(() => {
+          element.innerHTML = '';
+          element.classList.remove('fade-out');
+        }, 500);
+      }, 5000);
+    }
+
+    async function init() {
+      if (window.ethereum) {
+        try {
+          provider = new ethers.providers.Web3Provider(window.ethereum);
+          await provider.send("eth_requestAccounts", []);
+          signer = provider.getSigner();
+          contract = new ethers.Contract(contractAddress, contractABI, signer);
+          
+          currentAccount = await signer.getAddress();
+          const checksumAddress = toChecksumAddress(currentAccount);
+          document.getElementById('connectedAccount').textContent = checksumAddress;
+          
+          console.log("Connected with account:", checksumAddress);
+        } catch (error) {
+          console.error("Error connecting:", error);
+          showTemporaryError('transportStatus', "Error connecting to Ethereum: " + error.message);
+        }
+      } else {
+        showTemporaryError('transportStatus', "Please install MetaMask to use this application!");
+      }
+    }
+
+    document.getElementById('viewBatchBtn').addEventListener('click', async () => {
+      const batchId = document.getElementById('batchIdInput').value;
+      if (!batchId) {
+        showTemporaryError('batchDetails', "Please enter a batch ID");
+        return;
+      }
+
+      try {
+        document.getElementById('batchDetails').innerHTML = `
+          <div class="loading-spinner"></div>
+          <p>Loading batch details...</p>
+        `;
+
+        const batch = await contract.getBatch(batchId);
+        if (!batch || !batch.harvesting) {
+          throw new Error('Batch does not exist');
+        }
+        displayBatchDetails(batchId, batch, 'batchDetails');
+      } catch (err) {
+        console.error(err);
+        showTemporaryError('batchDetails', `Error: ${err.reason || err.message || 'Batch does not exist'}`);
+      }
+    });
+
+    document.getElementById('viewMyBatchesBtn').addEventListener('click', async () => {
+      if (!currentAccount) {
+        showTemporaryError('myBatches', "Please connect your wallet first");
+        return;
+      }
+
+      try {
+        document.getElementById('myBatches').innerHTML = `
+          <div class="loading-spinner"></div>
+          <p>Loading your batches...</p>
+        `;
+
+        const checksumAddress = toChecksumAddress(currentAccount);
+        const batchIds = await contract.getBatchesByTransporter(checksumAddress);
+        
+        if (batchIds.length === 0) {
+          document.getElementById('myBatches').innerHTML = `
+            <div class="status-message">
+              No batches found for your account.
+            </div>
+          `;
+          return;
+        }
+
+        let batchesHTML = '';
+        for (const batchId of batchIds) {
+          batchesHTML += `
+            <div class="batch-card">
+              <p><strong>Batch ID:</strong> ${batchId}</p>
+              <button onclick="loadBatchDetails(${batchId})">
+                View Full Details
+              </button>
+              <div id="batch-${batchId}-details" style="display:none; margin-top:1rem;"></div>
+            </div>
+          `;
+        }
+
+        document.getElementById('myBatches').innerHTML = batchesHTML;
+      } catch (err) {
+        console.error(err);
+        showTemporaryError('myBatches', `Error loading your batches: ${err.reason || err.message}`);
+      }
+    });
+
+    // Global function to load batch details
+    window.loadBatchDetails = async function(batchId) {
+      const detailsDiv = document.getElementById(`batch-${batchId}-details`);
+      try {
+        detailsDiv.innerHTML = `
+          <div class="loading-spinner" style="width:1rem;height:1rem;"></div>
+          <p>Loading details...</p>
+        `;
+        detailsDiv.style.display = 'block';
+        
+        const batch = await contract.getBatch(batchId);
+        if (!batch || !batch.harvesting) {
+          throw new Error('Batch details not available');
+        }
+        displayBatchDetails(batchId, batch, detailsDiv);
+      } catch (err) {
+        console.error(err);
+        detailsDiv.innerHTML = `
+          <div class="status-message status-error">
+            Error: ${err.reason || err.message || 'Failed to load details'}
+          </div>
+        `;
+        setTimeout(() => {
+          detailsDiv.innerHTML = '';
+          detailsDiv.style.display = 'none';
+        }, 5000);
+      }
+    };
+
+    function displayBatchDetails(batchId, batch, container) {
+      const containerElement = typeof container === 'string' ?
+        document.getElementById(container) : container;
+    
+      // Helper function to check if a value is valid for display
+      const isValid = (value, isNumber = false) => {
+        if (isNumber) {
+          try {
+            if (value === undefined || value === null) return false;
+            if (typeof value === 'number') return value > 0;
+            if (typeof value.gt === 'function') return value.gt(0); // BigNumber
+            return false;
+          } catch {
+            return false;
+          }
+        }
+        return value !== undefined && value !== null && value.toString().trim() !== '';
+      };
+    
+      // Helper function to add a field if valid
+      const addField = (label, value, isNumber = false, suffix = '') => {
+        if (isValid(value, isNumber)) {
+          let displayValue = value;
+          if (isNumber && label === 'Duration') {
+            displayValue = (typeof value === 'number' ? value : value.toString()) / 10; // Convert back to hours (e.g., 10 -> 1)
+            // Ensure displayValue is a number with one decimal place
+            displayValue = Number(displayValue.toFixed(1));
+          } else if (isNumber) {
+            displayValue = typeof value === 'number' ? value : value.toString(); // handle BigNumber
+          }
+          return `<p><strong>${label}:</strong> ${displayValue}${suffix}</p>`;
+        }
+        return '';
+      };
+    
+      // Helper function to add a section with a header if it has content
+      const addSection = (title, content) => {
+        if (content.trim()) {
+          return `
+            <h4>${title}</h4>
+            ${content}
+          `;
+        }
+        return '';
+      };
+    
+      // Build sections
+      let harvestingContent = '';
+      harvestingContent += addField('Farmer', batch.harvesting.farmer);
+      harvestingContent += addField('Harvest Date', batch.harvesting.date);
+      harvestingContent += addField('Location', batch.harvesting.location);
+      harvestingContent += addField('Method', batch.harvesting.method);
+      harvestingContent += addField('Quantity', batch.harvesting.quantity, true, ' grams');
+      harvestingContent += addField('Variety', batch.harvesting.variety);
+    
+      let transportationContent = '';
+      transportationContent += addField('Transporter ID', batch.transportation.transporterId);
+      transportationContent += addField('Duration', batch.transportation.duration, true, ' hour');
+      transportationContent += addField('Conditions', batch.transportation.conditions);
+      transportationContent += addField('Vehicle Type', batch.transportation.vehicleType);
+    
+      let storageBeforeContent = '';
+      storageBeforeContent += addField('Pressing Facility ID', batch.storageBeforePressing.pressingId);
+      storageBeforeContent += addField('Duration', batch.storageBeforePressing.duration, true, ' hours');
+      storageBeforeContent += addField('Conditions', batch.storageBeforePressing.conditions);
+      storageBeforeContent += addField('Temperature', batch.storageBeforePressing.temperature, true, '°C');
+      storageBeforeContent += addField('Humidity', batch.storageBeforePressing.humidity, true, '%');
+      storageBeforeContent += addField('Good Olives', batch.storageBeforePressing.goodOlives, true);
+      storageBeforeContent += addField('Bad Olives', batch.storageBeforePressing.badOlives, true);
+    
+      let pressingContent = '';
+      pressingContent += addField('Pressing Date', batch.pressingProcess.date);
+      pressingContent += addField('Pressing Facility ID', batch.pressingProcess.pressingId);
+      pressingContent += addField('Facility', batch.pressingProcess.facility);
+      pressingContent += addField('Method', batch.pressingProcess.method);
+      pressingContent += addField('Conditions', batch.pressingProcess.conditions);
+      pressingContent += addField('Temperature', batch.pressingProcess.temperature, true, '°C');
+      pressingContent += addField('Pressure', batch.pressingProcess.pressure, true, ' bar');
+      pressingContent += addField('Operator', batch.pressingProcess.operatorName);
+    
+      let storageAfterContent = '';
+      storageAfterContent += addField('Tank ID', batch.storageAfterPressing.tankId);
+      storageAfterContent += addField('Pressing Facility ID', batch.storageAfterPressing.pressingId);
+      storageAfterContent += addField('Duration', batch.storageAfterPressing.duration, true, ' hours');
+      storageAfterContent += addField('Conditions', batch.storageAfterPressing.conditions);
+      storageAfterContent += addField('Temperature', batch.storageAfterPressing.temperature, true, '°C');
+      storageAfterContent += addField('Humidity', batch.storageAfterPressing.humidity, true, '%');
+      storageAfterContent += `<p><strong>Inert Atmosphere:</strong> ${batch.storageAfterPressing.inertAtmosphere ? 'Yes' : 'No'}</p>`;
+    
+      let qualityCheckContent = '';
+      qualityCheckContent += addField('Lab', batch.qualityCheck.lab);
+      qualityCheckContent += addField('ONH ID', batch.qualityCheck.onhId);
+      qualityCheckContent += addField('Acidity', batch.qualityCheck.acidity, true);
+      qualityCheckContent += addField('Quality', batch.qualityCheck.quality);
+      qualityCheckContent += addField('Area', batch.qualityCheck.area);
+      qualityCheckContent += addField('Peroxide Value', batch.qualityCheck.peroxideValue, true);
+      qualityCheckContent += `<p><strong>Certified Organic:</strong> ${batch.qualityCheck.certifiedOrganic ? 'Yes' : 'No'}</p>`;
+    
+      // Add status (always show)
+      const statusContent = `<p><strong>Status:</strong> ${batch.isFinalized ? '✅ Finalized' : '❌ Not Finalized'}</p>`;
+    
+      // Combine sections
+      const html = `
+        <div class="batch-details">
+          <h4>Batch ${batchId} Details</h4>
+          ${addSection('Harvesting Details', harvestingContent)}
+          ${addSection('Transportation Details', transportationContent)}
+          ${addSection('Pre-Pressing Storage', storageBeforeContent)}
+          ${addSection('Pressing Process', pressingContent)}
+          ${addSection('Post-Pressing Storage', storageAfterContent)}
+          ${addSection('Quality Check', qualityCheckContent)}
+          ${statusContent}
+        </div>
+      `;
+    
+      containerElement.innerHTML = html;
+    }
+
+    document.getElementById('logTransportBtn').addEventListener('click', async () => {
+      const batchId = document.getElementById('transportBatchId').value;
+      const durationInput = document.getElementById('transportDuration').value;
+      const conditions = document.getElementById('transportConditions').value;
+      const vehicleType = document.getElementById('vehicleType').value;
+
+      if (!batchId || !durationInput || !conditions || !vehicleType) {
+        showTemporaryError('transportStatus', "Please fill in all fields");
+        return;
+      }
+
+      // Parse duration as a float and convert to integer (e.g., 1 -> 10, where 1 unit = 0.1 hours)
+      const duration = Math.round(parseFloat(durationInput) * 10);
+      if (isNaN(duration) || duration <= 0) {
+        showTemporaryError('transportStatus', "Duration must be a valid positive number (e.g., 0.5, 1, 1.5)");
+        return;
+      }
+
+      try {
+        document.getElementById('transportStatus').innerHTML = `
+          <div class="status-message">
+            Checking batch status...
+          </div>
+        `;
+
+        // First check if batch exists
+        const batch = await contract.getBatch(batchId);
+        if (!batch || !batch.harvesting) {
+          throw new Error('Batch does not exist');
+        }
+
+        // Check if batch already has transportation data
+        if (batch.transportation.transporterId && batch.transportation.transporterId.length > 0) {
+          throw new Error(`Batch ${batchId} was already transported by ${batch.transportation.transporterId}`);
+        }
+
+        document.getElementById('transportStatus').innerHTML = `
+          <div class="status-message">
+            Processing transaction...
+          </div>
+        `;
+
+        const checksumAddress = toChecksumAddress(currentAccount);
+        const tx = await contract.logTransportation(
+          batchId,
+          duration,
+          conditions,
+          checksumAddress,
+          vehicleType,
+          { gasLimit: 500000 }
+        );
+        
+        document.getElementById('transportStatus').innerHTML = `
+          <div class="status-message">
+            Transaction sent, waiting for confirmation...
+          </div>
+        `;
+
+        await tx.wait();
+        
+        document.getElementById('transportStatus').innerHTML = `
+          <div class="status-message status-success">
+            Transportation logged successfully!
+          </div>
+        `;
+
+        // Clear form
+        document.getElementById('transportBatchId').value = '';
+        document.getElementById('transportDuration').value = '';
+        document.getElementById('transportConditions').value = '';
+        document.getElementById('vehicleType').value = '';
+
+        // Refresh views
+        document.getElementById('viewMyBatchesBtn').click();
+        
+        // Hide success message after 5 seconds
+        setTimeout(() => {
+          document.getElementById('transportStatus').innerHTML = '';
+        }, 5000);
+        
+      } catch (err) {
+        console.error("Full error:", err);
+        let errorMessage = err.reason || err.data?.message || err.message;
+        
+        showTemporaryError('transportStatus', errorMessage);
+      }
+    });
+
+    window.addEventListener('load', init);
+  </script>
+</body>
+</html>

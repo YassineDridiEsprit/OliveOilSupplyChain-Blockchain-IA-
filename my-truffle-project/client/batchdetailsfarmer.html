@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Batch Details - Olive Oil Traceability</title>
+    <meta name="description" content="Olive Oil Batch Details">
+    <meta name="keywords" content="olive oil, traceability, batch tracking">
+
+    <!-- Favicons -->
+    <link href="assets/img/favicon.png" rel="icon">
+    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Marcellus:wght@400&display=swap"
+        rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+    <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+
+    <!-- Main CSS File -->
+    <link href="assets/css/main.css" rel="stylesheet">
+
+    <!-- Inline CSS for Card Styling -->
+    <style>
+        :root {
+            --card-bg: #ffffff;
+            --card-text: #095215;
+            --content-text: #4a4a4a;
+            --primary-color: #095215;
+            --secondary-color: #f8f3e6;
+            --accent-color: #d4a017;
+            --border-radius: 12px;
+            --box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        .service-item {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 0;
+            margin-bottom: 2rem;
+            border-top: 4px solid var(--primary-color);
+            height: 100%;
+            transition: var(--transition);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .service-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .service-header {
+            background-color: var(--secondary-color);
+            color: var(--card-text);
+            padding: 1.25rem;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid rgba(9, 82, 21, 0.1);
+        }
+
+        .service-header .number {
+            font-size: 18px;
+            font-weight: 700;
+            margin-right: 12px;
+            color: var(--accent-color);
+            background: rgba(212, 160, 23, 0.1);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .service-header i {
+            font-size: 24px;
+            margin-right: 10px;
+            color: var(--primary-color);
+        }
+
+        .service-header h3 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .service-item-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .service-item-content p {
+            margin: 0.75rem 0;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--content-text);
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .service-item-content p strong {
+            color: var(--primary-color);
+            font-weight: 600;
+            min-width: 160px;
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        .service-item-content p span {
+            flex: 1;
+            word-break: break-word;
+        }
+
+        .no-data-message {
+            font-size: 1.1rem;
+            color: #666;
+            padding: 2rem;
+            text-align: center;
+            background: #f9f9f9;
+            border-radius: var(--border-radius);
+        }
+
+        .batch-id-badge {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 1.5rem;
+        }
+
+        .status-badge {
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-complete {
+            background: #e6f7e6;
+            color: #2e7d32;
+        }
+
+        .status-incomplete {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .section-title h2 {
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .section-title h2:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--accent-color);
+        }
+
+        @media (max-width: 768px) {
+            .service-item {
+                margin-bottom: 1.5rem;
+            }
+            
+            .service-item-content p {
+                flex-direction: column;
+            }
+            
+            .service-item-content p strong {
+                min-width: 100%;
+                margin-bottom: 0.25rem;
+            }
+        }
+
+        @media (min-width: 992px) {
+            .service-item {
+                min-height: 380px;
+            }
+        }
+
+        /* Timeline connector for cards */
+        .timeline-connector {
+            position: relative;
+        }
+
+        .timeline-connector:after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: -15px;
+            width: 30px;
+            height: 2px;
+            background: var(--accent-color);
+            z-index: 1;
+        }
+
+        .timeline-connector:before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: -10px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            transform: translateY(-50%);
+            z-index: 2;
+        }
+
+        @media (max-width: 991px) {
+            .timeline-connector:after,
+            .timeline-connector:before {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body class="blog-page">
+
+    <header id="header" class="header d-flex align-items-center position-relative">
+        <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
+            <a href="index1.html" class="logo d-flex align-items-center">
+                <img src="assets/img/logo.png" alt="AgriCulture">
+            </a>
+            <nav id="navmenu" class="navmenu">
+                <ul>
+                    <li><a href="index1.html">Home</a></li>
+                    <li><a href="services.html">Field Services</a></li>
+                    <li><a href="farmerinsect.html">Insect Detection</a></li>
+                    <li class="dropdown"><a href="#"><span>BlockChain System</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+                        <ul>
+                            <li><a href="farmer22.html">Create a Batch</a></li>
+                            <li><a href="loadbatches.html">Load My Batches</a></li>
+                            <li><a href="batchefindfarmer.html">View a Batch</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="about.html" class="active">About Us</a></li>
+                </ul>
+                <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+            </nav>
+            <div class="dropdown ms-3">
+                <a href="#" class="d-flex align-items-center" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-person-circle fs-4"></i> <!-- Reverted to Bootstrap icon -->
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="login.html">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+
+        <!-- Page Title -->
+        <div class="page-title dark-background" data-aos="fade"
+            style="background-image: url(assets/img/page-title-bg.webp);">
+            <div class="container position-relative">
+                <h1>Batch Details</h1>
+                <nav class="breadcrumbs">
+                    <ol>
+                        <li><a href="index.html">Home</a></li>
+                        <li class="current">Batch Details</li>
+                    </ol>
+                </nav>
+            </div>
+        </div><!-- End Page Title -->
+
+        <!-- About 3 Section -->
+        <section id="about-3" class="about-3 section">
+            <div class="container">
+                <div class="row gy-4 justify-content-between align-items-center">
+                    <div class="col-lg-6 order-lg-2 position-relative" data-aos="zoom-out">
+                        <img src="assets/img/img_sq_1.jpg" alt="Image" class="img-fluid rounded-lg">
+                        <a href="https://www.youtube.com/watch?v=Y7f98aduVJ8" class="glightbox pulsating-play-btn">
+                            <span class="play"><i class="bi bi-play-fill"></i></span>
+                        </a>
+                    </div>
+                    <div class="col-lg-5 order-lg-1" data-aos="fade-up" data-aos-delay="100">
+                        <h2 class="content-title mb-4">Batch Journey</h2>
+                        <p class="mb-4">
+                            Discover the complete story behind your olive oil. Each batch is meticulously documented—from harvest
+                            to bottle—ensuring full traceability, premium quality, and authenticity at every step of the journey.
+                        </p>
+                        <ul class="list-unstyled list-check">
+                            <li>Detailed harvest information including date, location, and quantity</li>
+                            <li>Transportation conditions and duration</li>
+                            <li>Complete processing stages from storage to pressing</li>
+                            <li>Quality assurance and lab testing results</li>
+                        </ul>
+                        <div id="batchDetails" class="mt-4">
+                            <div class="batch-id-badge">Batch ID: <span id="batchIdDisplay">Loading...</span></div>
+                            <div id="batchStatus" class="status-badge status-incomplete">Status: Loading...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section><!-- /About 3 Section -->
+
+        <section id="services" class="services section">
+            <!-- Section Title -->
+            <div class="container section-title" data-aos="fade-up">
+                <h2>Supply Chain Journey</h2>
+                <p>Trace every step of your olive oil's production process with our transparent supply chain tracking.</p>
+            </div><!-- End Section Title -->
+            <div class="content">
+                <div class="container">
+                    <div class="row gy-4" id="harvestingDetails">
+                        <!-- Dynamic content will be injected here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer id="footer" class="footer dark-background">
+        <div class="footer-top">
+            <div class="container">
+                <div class="row gy-4">
+                    <div class="col-lg-4 col-md-6 footer-about">
+                        <a href="index.html" class="logo d-flex align-items-center">
+                            <span class="sitename">Olive Oil Traceability</span>
+                        </a>
+                        <div class="footer-contact pt-3">
+                            <p>Olive Farms Network</p>
+                            <p>Olive City, OC 12345</p>
+                            <p class="mt-3"><strong>Phone:</strong> <span>+1 555-OLIVE-55</span></p>
+                            <p><strong>Email:</strong> <span><a
+                                        href="mailto:support@oliveoiltrace.com">support@oliveoiltrace.com</a></span></p>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-3 footer-links">
+                        <h4>Useful Links</h4>
+                        <ul>
+                            <li><a href="#">Home</a></li>
+                            <li><a href="#">About Us</a></li>
+                            <li><a href="#">Services</a></li>
+                            <li><a href="#">Contact</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="copyright text-center">
+            <div
+                class="container d-flex flex-column flex-lg-row justify-content-center justify-content-lg-between align-items-center">
+                <div class="d-flex flex-column align-items-center align-items-lg-start">
+                    <div>© 2025 Olive Oil Traceability System. All Rights Reserved</div>
+                    <div class="credits">Designed by <a href="#">OliveTech</a></div>
+                </div>
+                <div class="social-links order-first order-lg-last mb-3 mb-lg-0">
+                    <a href="#"><i class="bi bi-twitter-x"></i></a>
+                    <a href="#"><i class="bi bi-facebook"></i></a>
+                    <a href="#"><i class="bi bi-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll Top -->
+    <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
+            class="bi bi-arrow-up-short"></i></a>
+
+    <!-- Vendor JS Files -->
+    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/vendor/aos/aos.js"></script>
+    <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+    <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+
+    <!-- Main JS File -->
+    <script src="assets/js/main.js"></script>
+
+    <script>
+        const contractAddress = '0xA7cf92E595D1584C0fdCaDB87Ee48a39d8a65bc9';
+        const contractABI = [
+            {
+                "inputs": [
+                    { "internalType": "string", "name": "farmer", "type": "string" },
+                    { "internalType": "string", "name": "harvestDate", "type": "string" },
+                    { "internalType": "string", "name": "location", "type": "string" },
+                    { "internalType": "string", "name": "method", "type": "string" },
+                    { "internalType": "uint256", "name": "quantity", "type": "uint256" },
+                    { "internalType": "string", "name": "variety", "type": "string" }
+                ],
+                "name": "createBatch",
+                "outputs": [
+                    { "internalType": "uint256", "name": "batchId", "type": "uint256" }
+                ],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    { "internalType": "uint256", "name": "batchId", "type": "uint256" }
+                ],
+                "name": "getBatch",
+                "outputs": [
+                    {
+                        "components": [
+                            {
+                                "components": [
+                                    { "internalType": "string", "name": "farmer", "type": "string" },
+                                    { "internalType": "string", "name": "date", "type": "string" },
+                                    { "internalType": "string", "name": "location", "type": "string" },
+                                    { "internalType": "string", "name": "method", "type": "string" },
+                                    { "internalType": "uint256", "name": "quantity", "type": "uint256" },
+                                    { "internalType": "string", "name": "variety", "type": "string" }
+                                ],
+                                "internalType": "struct Harvesting",
+                                "name": "harvesting",
+                                "type": "tuple"
+                            },
+                            {
+                                "components": [
+                                    { "internalType": "uint256", "name": "duration", "type": "uint256" },
+                                    { "internalType": "string", "name": "transporterId", "type": "string" },
+                                    { "internalType": "string", "name": "conditions", "type": "string" },
+                                    { "internalType": "string", "name": "vehicleType", "type": "string" }
+                                ],
+                                "internalType": "struct Transportation",
+                                "name": "transportation",
+                                "type": "tuple"
+                            },
+                            {
+                                "components": [
+                                    { "internalType": "uint256", "name": "duration", "type": "uint256" },
+                                    { "internalType": "string", "name": "pressingId", "type": "string" },
+                                    { "internalType": "string", "name": "conditions", "type": "string" },
+                                    { "internalType": "uint256", "name": "temperature", "type": "uint256" },
+                                    { "internalType": "uint256", "name": "humidity", "type": "uint256" },
+                                    { "internalType": "uint256", "name": "goodOlives", "type": "uint256" },
+                                    { "internalType": "uint256", "name": "badOlives", "type": "uint256" }
+                                ],
+                                "internalType": "struct StorageBeforePressing",
+                                "name": "storageBeforePressing",
+                                "type": "tuple"
+                            },
+                            {
+                                "components": [
+                                    { "internalType": "string", "name": "date", "type": "string" },
+                                    { "internalType": "string", "name": "pressingId", "type": "string" },
+                                    { "internalType": "string", "name": "facility", "type": "string" },
+                                    { "internalType": "string", "name": "method", "type": "string" },
+                                    { "internalType": "string", "name": "conditions", "type": "string" },
+                                    { "internalType": "uint256", "name": "temperature", "type": "uint256" },
+                                    { "internalType": "uint256", "name": "pressure", "type": "uint256" },
+                                    { "internalType": "string", "name": "operatorName", "type": "string" }
+                                ],
+                                "internalType": "struct PressingProcess",
+                                "name": "pressingProcess",
+                                "type": "tuple"
+                            },
+                            {
+                                "components": [
+                                    { "internalType": "string", "name": "tankId", "type": "string" },
+                                    { "internalType": "string", "name": "pressingId", "type": "string" },
+                                    { "internalType": "uint256", "name": "duration", "type": "uint256" },
+                                    { "internalType": "string", "name": "conditions", "type": "string" },
+                                    { "internalType": "uint256", "name": "temperature", "type": "uint256" },
+                                    { "internalType": "uint256", "name": "humidity", "type": "uint256" },
+                                    { "internalType": "bool", "name": "inertAtmosphere", "type": "bool" }
+                                ],
+                                "internalType": "struct StorageAfterPressing",
+                                "name": "storageAfterPressing",
+                                "type": "tuple"
+                            },
+                            {
+                                "components": [
+                                    { "internalType": "string", "name": "lab", "type": "string" },
+                                    { "internalType": "string", "name": "onhId", "type": "string" },
+                                    { "internalType": "uint256", "name": "acidity", "type": "uint256" },
+                                    { "internalType": "string", "name": "quality", "type": "string" },
+                                    { "internalType": "string", "name": "area", "type": "string" },
+                                    { "internalType": "uint256", "name": "peroxideValue", "type": "uint256" },
+                                    { "internalType": "bool", "name": "certifiedOrganic", "type": "bool" }
+                                ],
+                                "internalType": "struct QualityCheck",
+                                "name": "qualityCheck",
+                                "type": "tuple"
+                            },
+                            { "internalType": "bool", "name": "isFinalized", "type": "bool" }
+                        ],
+                        "internalType": "struct Batch",
+                        "name": "",
+                        "type": "tuple"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "getBatchCount",
+                "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    { "internalType": "address", "name": "farmer", "type": "address" }
+                ],
+                "name": "getBatchesByFarmer",
+                "outputs": [
+                    { "internalType": "uint256[]", "name": "", "type": "uint256[]" }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            }
+        ];
+
+        let provider;
+        let signer;
+        let contract;
+
+        function toChecksumAddress(address) {
+            return ethers.utils.getAddress(address.toLowerCase());
+        }
+
+        function showTemporaryError(elementId, message, type = 'error') {
+            const element = document.getElementById(elementId);
+            const className = type === 'success' ? 'alert alert-success' : 'alert alert-danger';
+            element.innerHTML = `
+                <div class="${className}">
+                    ${message}
+                </div>
+            `;
+            setTimeout(() => {
+                element.classList.add('fade');
+                setTimeout(() => {
+                    element.innerHTML = '';
+                    element.classList.remove('fade');
+                }, 500);
+            }, 5000);
+        }
+
+        async function init() {
+            if (window.ethereum) {
+                try {
+                    provider = new ethers.providers.Web3Provider(window.ethereum);
+                    const accounts = await provider.send("eth_requestAccounts", []);
+                    if (accounts.length === 0) {
+                        showTemporaryError('batchDetails', "No Ethereum account connected. Please connect MetaMask.");
+                        return;
+                    }
+                    signer = provider.getSigner();
+                    contract = new ethers.Contract(contractAddress, contractABI, signer);
+
+                    // Fetch batch ID from URL and load details
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const batchId = urlParams.get('batchId');
+                    if (batchId) {
+                        document.getElementById('batchIdDisplay').textContent = batchId;
+                        loadBatchDetails(batchId);
+                    } else {
+                        showTemporaryError('batchDetails', "No batch ID provided in URL.");
+                    }
+                } catch (error) {
+                    console.error("Error connecting:", error);
+                    showTemporaryError('batchDetails', "Error connecting to Ethereum: " + error.message);
+                }
+            } else {
+                showTemporaryError('batchDetails', "Please install MetaMask to use this application!");
+            }
+        }
+
+        async function loadBatchDetails(batchId) {
+            if (!batchId || isNaN(batchId)) {
+                showTemporaryError('batchDetails', "Invalid batch ID provided.");
+                return;
+            }
+
+            try {
+                const batch = await contract.getBatch(batchId);
+                if (!batch || !batch.harvesting) {
+                    throw new Error('Batch does not exist');
+                }
+                
+                // Update status badge
+                const statusBadge = document.getElementById('batchStatus');
+                statusBadge.textContent = batch.isFinalized ? 'Status: Complete' : 'Status: In Progress';
+                statusBadge.className = batch.isFinalized ? 'status-badge status-complete' : 'status-badge status-incomplete';
+                
+                displayBatchDetails(batchId, batch, 'harvestingDetails');
+            } catch (err) {
+                console.error(err);
+                showTemporaryError('batchDetails', `Error: ${err.reason || err.message || 'Batch does not exist'}`);
+            }
+        }
+
+        function displayBatchDetails(batchId, batch, container) {
+            const containerElement = typeof container === 'string' ?
+                document.getElementById(container) : container;
+
+            const isValid = (value, isNumber = false) => {
+                if (isNumber) {
+                    try {
+                        if (value === undefined || value === null) return false;
+                        if (typeof value === 'number') return value > 0;
+                        if (typeof value.gt === 'function') return value.gt(0);
+                        return false;
+                    } catch {
+                        return false;
+                    }
+                }
+                return value !== undefined && value !== null && value.toString().trim() !== '';
+            };
+
+            const formatField = (label, value, isNumber = false, suffix = '') => {
+                if (isValid(value, isNumber)) {
+                    let displayValue = value;
+                    if (isNumber && label === 'Quantity') {
+                        displayValue = (typeof value === 'number' ? value : value.toString()) / 1000;
+                        displayValue = Number(displayValue.toFixed(2));
+                    } else if (isNumber && label === 'Duration') {
+                        displayValue = (typeof value === 'number' ? value : value.toString()) / 10;
+                        displayValue = Number(displayValue.toFixed(1));
+                        suffix = displayValue === 1 ? ' hour' : ' hours';
+                    } else if (isNumber && label === 'Temperature') {
+                        displayValue = (typeof value === 'number' ? value : value.toString()) / 10;
+                        displayValue = Number(displayValue.toFixed(1));
+                        suffix = '°C';
+                    } else if (isNumber && label === 'Humidity') {
+                        displayValue = (typeof value === 'number' ? value : value.toString()) / 10;
+                        displayValue = Number(displayValue.toFixed(1));
+                        suffix = '%';
+                    } else if (isNumber && label === 'Acidity') {
+                        displayValue = (typeof value === 'number' ? value : value.toString()) / 10;
+                        displayValue = Number(displayValue.toFixed(1));
+                        suffix = '%';
+                    } else if (isNumber && label === 'Pressure') {
+                        displayValue = (typeof value === 'number' ? value : value.toString());
+                        suffix = ' bar';
+                    } else if (isNumber && label === 'Peroxide Value') {
+                        displayValue = (typeof value === 'number' ? value : value.toString());
+                        suffix = ' meq/kg';
+                    } else if (isNumber) {
+                        displayValue = typeof value === 'number' ? value : value.toString();
+                    }
+                    return `${displayValue}${suffix}`;
+                }
+                return 'Not available';
+            };
+
+            const sections = [
+                {
+                    title: 'Harvesting',
+                    icon: 'bi-tree',
+                    fields: [
+                        { label: 'Farmer', value: batch.harvesting.farmer },
+                        { label: 'Harvest Date', value: batch.harvesting.date },
+                        { label: 'Location', value: batch.harvesting.location },
+                        { label: 'Method', value: batch.harvesting.method },
+                        { label: 'Quantity', value: batch.harvesting.quantity, isNumber: true, suffix: ' kg' },
+                        { label: 'Variety', value: batch.harvesting.variety }
+                    ]
+                },
+                {
+                    title: 'Transportation',
+                    icon: 'bi-truck',
+                    fields: [
+                        { label: 'Transporter ID', value: batch.transportation.conditions },
+                        { label: 'Duration', value: batch.transportation.duration, isNumber: true },
+                        { label: 'Conditions', value: batch.transportation.transporterId },
+                        { label: 'Vehicle Type', value: batch.transportation.vehicleType }
+                    ]
+                },
+                {
+                    title: 'Storage Before Pressing',
+                    icon: 'bi-box-seam',
+                    fields: [
+                        { label: 'Pressing Facility ID', value: batch.storageBeforePressing.pressingId },
+                        { label: 'Duration', value: batch.storageBeforePressing.duration, isNumber: true },
+                        { label: 'Conditions', value: batch.storageBeforePressing.conditions },
+                        { label: 'Temperature', value: batch.storageBeforePressing.temperature, isNumber: true },
+                        { label: 'Humidity', value: batch.storageBeforePressing.humidity, isNumber: true },
+                        { label: 'Good Olives', value: batch.storageBeforePressing.goodOlives, isNumber: true },
+                        { label: 'Bad Olives', value: batch.storageBeforePressing.badOlives, isNumber: true }
+                    ]
+                },
+                {
+                    title: 'Pressing Process',
+                    icon: 'bi-gear-wide-connected',
+                    fields: [
+                        { label: 'Pressing Date', value: batch.pressingProcess.date },
+                        { label: 'Pressing Facility ID', value: batch.pressingProcess.pressingId },
+                        { label: 'Facility', value: batch.pressingProcess.facility },
+                        { label: 'Method', value: batch.pressingProcess.method },
+                        { label: 'Conditions', value: batch.pressingProcess.conditions },
+                        { label: 'Temperature', value: batch.pressingProcess.temperature, isNumber: true },
+                        { label: 'Pressure', value: batch.pressingProcess.pressure, isNumber: true },
+                        { label: 'Operator', value: batch.pressingProcess.operatorName }
+                    ]
+                },
+                {
+                    title: 'Storage After Pressing',
+                    icon: 'bi-archive',
+                    fields: [
+                        { label: 'Tank ID', value: batch.storageAfterPressing.tankId },
+                        { label: 'Pressing Facility ID', value: batch.storageAfterPressing.pressingId },
+                        { label: 'Duration', value: batch.storageAfterPressing.duration, isNumber: true },
+                        { label: 'Conditions', value: batch.storageAfterPressing.conditions },
+                        { label: 'Temperature', value: batch.storageAfterPressing.temperature, isNumber: true },
+                        { label: 'Humidity', value: batch.storageAfterPressing.humidity, isNumber: true },
+                        { label: 'Inert Atmosphere', value: batch.storageAfterPressing.inertAtmosphere ? 'Yes' : 'No' }
+                    ]
+                },
+                {
+                    title: 'Quality Check',
+                    icon: 'bi-check-circle-fill',
+                    fields: [
+                        { label: 'Lab', value: batch.qualityCheck.lab },
+                        { label: 'ONH ID', value: batch.qualityCheck.onhId },
+                        { label: 'Acidity', value: batch.qualityCheck.acidity, isNumber: true },
+                        { label: 'Quality', value: batch.qualityCheck.quality },
+                        { label: 'Area', value: batch.qualityCheck.area },
+                        { label: 'Peroxide Value', value: batch.qualityCheck.peroxideValue, isNumber: true },
+                        { label: 'Certified Organic', value: batch.qualityCheck.certifiedOrganic ? 'Yes' : 'No' }
+                    ]
+                }
+            ];
+
+            // Filter sections to only those with at least one valid field
+            const validSections = sections.filter(section => 
+                section.fields.some(field => isValid(field.value, field.isNumber))
+            );
+
+            if (validSections.length === 0) {
+                containerElement.innerHTML = `
+                    <div class="col-12 text-center">
+                        <p class="no-data-message">No supply chain details available for this batch.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            validSections.forEach((section, index) => {
+                // Only include fields with valid values
+                const validFields = section.fields.filter(field => 
+                    isValid(field.value, field.isNumber)
+                );
+                
+                const fieldsHtml = validFields.map(field => {
+                    const value = formatField(field.label, field.value, field.isNumber, field.suffix);
+                    return `
+                        <p>
+                            <strong>${field.label}:</strong>
+                            <span>${value}</span>
+                        </p>
+                    `;
+                }).join('');
+
+                // Add timeline connector to all but the last card
+                const connectorClass = index < validSections.length - 1 ? 'timeline-connector' : '';
+                
+                html += `
+                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="${index * 100}">
+                        <div class="service-item ${connectorClass}">
+                            <div class="service-header">
+                                <span class="number">${index + 1}</span>
+                                <i class="bi ${section.icon}"></i>
+                                <h3>${section.title}</h3>
+                            </div>
+                            <div class="service-item-content">
+                                ${fieldsHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            containerElement.innerHTML = html;
+            
+            // Initialize AOS animations for the new elements
+            if (window.AOS) {
+                AOS.refresh();
+            }
+        }
+
+        window.addEventListener('load', init);
+    </script>
+
+</body>
+
+</html>

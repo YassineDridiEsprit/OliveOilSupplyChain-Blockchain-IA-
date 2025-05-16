@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Olive Oil Traceability - Farmer Portal</title>
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    :root {
+      --primary-color: #5a7247;
+      --secondary-color: #8a9a5b;
+      --accent-color: #d4af37;
+      --light-bg: #f8f9fa;
+      --dark-text: #2c3e50;
+      --light-text: #f8f9fa;
+      --success-color: #2e7d32;
+      --border-radius: 8px;
+      --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.6;
+      color: var(--dark-text);
+      background-color: var(--light-bg);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    h1, h2, h3 {
+      font-weight: 600;
+      color: var(--primary-color);
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      text-align: center;
+      padding-top: 1rem;
+      position: relative;
+    }
+
+    h1::after {
+      content: '';
+      display: block;
+      width: 100px;
+      height: 4px;
+      background: var(--accent-color);
+      margin: 0.5rem auto 1.5rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      padding: 2rem;
+      margin-bottom: 2rem;
+      transition: var(--transition);
+      border-left: 4px solid var(--primary-color);
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .batch-card {
+      background: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      border-left: 3px solid var(--secondary-color);
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .form-group input,
+    .form-group button {
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="date"] {
+      width: 70%;
+      padding: 0.75rem 1rem;
+      border: 1px solid #ddd;
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+      transition: var(--transition);
+    }
+
+    .form-group input[readonly] {
+      background-color: #f0f0f0;
+      cursor: not-allowed;
+    }
+
+    .form-group input[type="file"] {
+      display: none;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(90, 114, 71, 0.2);
+    }
+
+    .form-group button {
+      background-color: var(--primary-color);
+      color: var(--light-text);
+      border: none;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 500;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      transition: var(--transition);
+      width: auto;
+      flex-shrink: 0;
+    }
+
+    .form-group button:hover {
+      background-color: #3a5a20;
+      transform: translateY(-2px);
+    }
+
+    .form-group button:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .batch-detail-btn {
+      background-color: var(--primary-color);
+      color: var(--light-text);
+      border: none;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 500;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      transition: var(--transition);
+      width: auto;
+      flex-shrink: 0;
+    }
+
+    .batch-detail-btn:hover {
+      background-color: #3a5a20;
+      transform: translateY(-2px);
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 2rem;
+      height: 2rem;
+      border: 3px solid rgba(90, 114, 71, 0.3);
+      border-radius: 50%;
+      border-top-color: var(--primary-color);
+      animation: spin 1s ease-in-out infinite;
+      margin: 2rem auto;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .status-message {
+      padding: 1rem;
+      margin: 1rem 0;
+      border-radius: var(--border-radius);
+      transition: opacity 0.5s ease;
+    }
+
+    .status-success {
+      background-color: #e6f7e6;
+      color: var(--success-color);
+    }
+
+    .status-error {
+      background-color: #ffebee;
+      color: #c62828;
+    }
+
+    .status-warning {
+      background-color: #fff8e1;
+      color: #ff8f00;
+    }
+
+    .account-info {
+      background-color: #f0f7ed;
+      padding: 1rem;
+      border-radius: var(--border-radius);
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+    }
+
+    .batch-details {
+      margin-top: 1rem;
+      padding: 1rem;
+      background-color: #f9f9f9;
+      border-radius: var(--border-radius);
+    }
+
+    .batch-details h4 {
+      margin-bottom: 0.5rem;
+      color: var(--secondary-color);
+    }
+
+    .batch-details p {
+      margin-bottom: 0.5rem;
+    }
+
+    .result-display {
+      padding: 1rem;
+      margin: 1rem 0;
+      border-radius: var(--border-radius);
+      background-color: #e8f0e5;
+      color: var(--dark-text);
+      font-weight: 500;
+    }
+
+    .fade-out {
+      opacity: 0;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 0 10px;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      h2 {
+        font-size: 1.5rem;
+      }
+      
+      .card {
+        padding: 1.5rem;
+      }
+
+      .form-group input[type="text"],
+      .form-group input[type="date"] {
+        width: 60%;
+      }
+
+      .form-group button,
+      .batch-detail-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Olive Oil Traceability System</h1>
+    <div class="account-info">
+      <p>Connected Account: <span id="connectedAccount"></span></p>
+    </div>
+
+    <div class="card">
+      <h2>View Batch by ID</h2>
+      <div class="form-group">
+        <input type="number" id="viewBatchId" placeholder="Enter Batch ID">
+        <button id="viewBatchBtn">View Batch</button>
+      </div>
+      <div id="batchDetails"></div>
+    </div>
+
+    <div class="card">
+      <h2>My Batches</h2>
+      <div class="form-group">
+        <button id="loadMyBatchesBtn">Load My Batches</button>
+      </div>
+      <div id="myBatches"></div>
+    </div>
+
+    <div class="card">
+      <h2>Create a New Batch</h2>
+      <form id="create-batch-form">
+        <div class="form-group">
+          <input type="text" id="farmerName" placeholder="Farmer Name" required readonly>
+        </div>
+        <div class="form-group">
+          <input type="date" id="harvestDate" required>
+        </div>
+        <div class="form-group">
+          <input type="text" id="farmLocation" placeholder="Farm Location" required>
+        </div>
+        <div class="form-group">
+          <input type="text" id="farmerMethod" placeholder="Farmer Method" required>
+        </div>
+        <div class="form-group">
+          <input type="text" id="variety" placeholder="Olive Variety (upload below)" readonly required>
+          <input type="file" id="variety-input" name="file" accept="image/*" style="display: none;">
+          <button type="button" id="classify-variety-btn">Classify Variety</button>
+        </div>
+        <div id="variety-loading" style="display: none;">
+          <div class="loading-spinner"></div>
+          <p>Processing image, please wait...</p>
+        </div>
+        <div class="form-group">
+          <input type="text" id="quantity" placeholder="Quantity in kg (upload below)" readonly required>
+          <input type="file" id="quantity-input" name="file" accept="video/*" style="display: none;">
+          <button type="button" id="measure-quantity-btn">Measure Quantity</button>
+        </div>
+        <div id="quantity-loading" style="display: none;">
+          <div class="loading-spinner"></div>
+          <p>Processing video, please wait...</p>
+        </div>
+        <div class="form-group">
+          <button type="submit" id="createBatchBtn">Create Batch</button>
+        </div>
+        <div id="statusMessage" class="status-message"></div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const contractAddress = '0xA7cf92E595D1584C0fdCaDB87Ee48a39d8a65bc9';
+    const contractABI = [
+      {
+        "inputs": [
+          { "internalType": "string", "name": "farmer", "type": "string" },
+          { "internalType": "string", "name": "harvestDate", "type": "string" },
+          { "internalType": "string", "name": "location", "type": "string" },
+          { "internalType": "string", "name": "method", "type": "string" },
+          { "internalType": "uint256", "name": "quantity", "type": "uint256" },
+          { "internalType": "string", "name": "variety", "type": "string" }
+        ],
+        "name": "createBatch",
+        "outputs": [
+          { "internalType": "uint256", "name": "batchId", "type": "uint256" }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          { "internalType": "uint256", "name": "batchId", "type": "uint256" }
+        ],
+        "name": "getBatch",
+        "outputs": [
+          {
+            "components": [
+              {
+                "components": [
+                  { "internalType": "string", "name": "farmer", "type": "string" },
+                  { "internalType": "string", "name": "date", "type": "string" },
+                  { "internalType": "string", "name": "location", "type": "string" },
+                  { "internalType": "string", "name": "method", "type": "string" },
+                  { "internalType": "uint256", "name": "quantity", "type": "uint256" },
+                  { "internalType": "string", "name": "variety", "type": "string" }
+                ],
+                "internalType": "struct Harvesting",
+                "name": "harvesting",
+                "type": "tuple"
+              },
+              {
+                "components": [
+                  { "internalType": "uint256", "name": "duration", "type": "uint256" },
+                  { "internalType": "string", "name": "conditions", "type": "string" },
+                  { "internalType": "string", "name": "transporterId", "type": "string" },
+                  { "internalType": "string", "name": "vehicleType", "type": "string" }
+                ],
+                "internalType": "struct Transportation",
+                "name": "transportation",
+                "type": "tuple"
+              },
+              {
+                "components": [
+                  { "internalType": "uint256", "name": "duration", "type": "uint256" },
+                  { "internalType": "string", "name": "pressingId", "type": "string" },
+                  { "internalType": "string", "name": "conditions", "type": "string" },
+                  { "internalType": "uint256", "name": "temperature", "type": "uint256" },
+                  { "internalType": "uint256", "name": "humidity", "type": "uint256" },
+                  { "internalType": "uint256", "name": "goodOlives", "type": "uint256" },
+                  { "internalType": "uint256", "name": "badOlives", "type": "uint256" }
+                ],
+                "internalType": "struct StorageBeforePressing",
+                "name": "storageBeforePressing",
+                "type": "tuple"
+              },
+              {
+                "components": [
+                  { "internalType": "string", "name": "date", "type": "string" },
+                  { "internalType": "string", "name": "pressingId", "type": "string" },
+                  { "internalType": "string", "name": "facility", "type": "string" },
+                  { "internalType": "string", "name": "method", "type": "string" },
+                  { "internalType": "string", "name": "conditions", "type": "string" },
+                  { "internalType": "uint256", "name": "temperature", "type": "uint256" },
+                  { "internalType": "uint256", "name": "pressure", "type": "uint256" },
+                  { "internalType": "string", "name": "operatorName", "type": "string" }
+                ],
+                "internalType": "struct PressingProcess",
+                "name": "pressingProcess",
+                "type": "tuple"
+              },
+              {
+                "components": [
+                  { "internalType": "string", "name": "tankId", "type": "string" },
+                  { "internalType": "string", "name": "pressingId", "type": "string" },
+                  { "internalType": "uint256", "name": "duration", "type": "uint256" },
+                  { "internalType": "string", "name": "conditions", "type": "string" },
+                  { "internalType": "uint256", "name": "temperature", "type": "uint256" },
+                  { "internalType": "uint256", "name": "humidity", "type": "uint256" },
+                  { "internalType": "bool", "name": "inertAtmosphere", "type": "bool" }
+                ],
+                "internalType": "struct StorageAfterPressing",
+                "name": "storageAfterPressing",
+                "type": "tuple"
+              },
+              {
+                "components": [
+                  { "internalType": "string", "name": "lab", "type": "string" },
+                  { "internalType": "string", "name": "onhId", "type": "string" },
+                  { "internalType": "uint256", "name": "acidity", "type": "uint256" },
+                  { "internalType": "string", "name": "quality", "type": "string" },
+                  { "internalType": "string", "name": "area", "type": "string" },
+                  { "internalType": "uint256", "name": "peroxideValue", "type": "uint256" },
+                  { "internalType": "bool", "name": "certifiedOrganic", "type": "bool" }
+                ],
+                "internalType": "struct QualityCheck",
+                "name": "qualityCheck",
+                "type": "tuple"
+              },
+              { "internalType": "bool", "name": "isFinalized", "type": "bool" }
+            ],
+            "internalType": "struct Batch",
+            "name": "",
+            "type": "tuple"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "name": "getBatchCount",
+        "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          { "internalType": "address", "name": "farmer", "type": "address" }
+        ],
+        "name": "getBatchesByFarmer",
+        "outputs": [
+          { "internalType": "uint256[]", "name": "", "type": "uint256[]" }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      }
+    ];
+
+    let provider;
+    let signer;
+    let contract;
+    let currentAccount;
+
+    function toChecksumAddress(address) {
+      return ethers.utils.getAddress(address.toLowerCase());
+    }
+
+    function showTemporaryError(elementId, message, type = 'error') {
+      const element = document.getElementById(elementId);
+      const className = type === 'success' ? 'status-success' : 'status-error';
+      element.innerHTML = `
+        <div class="status-message ${className}">
+          ${message}
+        </div>
+      `;
+      setTimeout(() => {
+        element.classList.add('fade-out');
+        setTimeout(() => {
+          element.innerHTML = '';
+          element.classList.remove('fade-out');
+        }, 500);
+      }, 5000);
+    }
+
+    async function init() {
+      if (window.ethereum) {
+        try {
+          provider = new ethers.providers.Web3Provider(window.ethereum);
+          const accounts = await provider.send("eth_requestAccounts", []);
+          if (accounts.length === 0) {
+            showTemporaryError('statusMessage', "No Ethereum account connected. Please connect MetaMask.");
+            return;
+          }
+          signer = provider.getSigner();
+          contract = new ethers.Contract(contractAddress, contractABI, signer);
+          
+          currentAccount = await signer.getAddress();
+          const checksumAddress = toChecksumAddress(currentAccount);
+          document.getElementById('connectedAccount').textContent = checksumAddress;
+          document.getElementById('farmerName').value = checksumAddress;
+          
+          console.log("Connected with account:", checksumAddress);
+
+          window.ethereum.on('accountsChanged', async (accounts) => {
+            if (accounts.length > 0) {
+              currentAccount = accounts[0];
+              const newChecksumAddress = toChecksumAddress(currentAccount);
+              document.getElementById('connectedAccount').textContent = newChecksumAddress;
+              document.getElementById('farmerName').value = newChecksumAddress;
+              console.log("Switched to account:", newChecksumAddress);
+            } else {
+              showTemporaryError('statusMessage', "No account connected. Please reconnect MetaMask.");
+            }
+          });
+        } catch (error) {
+          console.error("Error connecting:", error);
+          showTemporaryError('statusMessage', "Error connecting to Ethereum: " + error.message);
+        }
+      } else {
+        showTemporaryError('statusMessage', "Please install MetaMask to use this application!");
+      }
+    }
+
+    $('#create-batch-form').submit(function(event) {
+      event.preventDefault();
+      const farmer = document.getElementById("farmerName").value.trim();
+      const harvestDate = document.getElementById("harvestDate").value.trim();
+      const location = document.getElementById("farmLocation").value.trim();
+      const method = document.getElementById("farmerMethod").value.trim();
+      const variety = document.getElementById("variety").value.trim();
+      const quantityKg = document.getElementById("quantity").value.trim();
+
+      if (!farmer || !harvestDate || !location || !method || !variety || !quantityKg) {
+        showTemporaryError('statusMessage', "All fields are required. Please fill in every field.");
+        return;
+      }
+
+      const quantityNum = parseFloat(quantityKg);
+      if (isNaN(quantityNum) || quantityNum <= 0) {
+        showTemporaryError('statusMessage', "Quantity must be a valid positive number.");
+        return;
+      }
+
+      try {
+        const quantityGrams = Math.round(quantityNum * 1000);
+
+        document.getElementById('statusMessage').innerHTML = `
+          <div class="status-message">
+            Processing transaction...
+          </div>
+        `;
+
+        contract.createBatch(farmer, harvestDate, location, method, quantityGrams, variety)
+          .then(tx => {
+            document.getElementById("statusMessage").innerHTML = `
+              <div class="status-message">
+                Transaction sent, waiting for confirmation...
+              </div>
+            `;
+            return tx.wait();
+          })
+          .then(() => {
+            document.getElementById("statusMessage").innerHTML = `
+              <div class="status-message status-success">
+                Batch created successfully!
+              </div>
+            `;
+
+            document.getElementById("farmerName").value = toChecksumAddress(currentAccount);
+            document.getElementById("harvestDate").value = "";
+            document.getElementById("farmLocation").value = "";
+            document.getElementById("farmerMethod").value = "";
+            document.getElementById("variety").value = "";
+            document.getElementById("quantity").value = "";
+
+            document.getElementById('loadMyBatchesBtn').click();
+            
+            setTimeout(() => {
+              document.getElementById('statusMessage').innerHTML = '';
+            }, 5000);
+          })
+          .catch(err => {
+            console.error(err);
+            showTemporaryError('statusMessage', "Error creating batch: " + (err.reason || err.message));
+          });
+      } catch (err) {
+        console.error(err);
+        showTemporaryError('statusMessage', "Error creating batch: " + (err.reason || err.message));
+      }
+    });
+
+    document.getElementById('viewBatchBtn').addEventListener('click', async () => {
+      const batchId = document.getElementById('viewBatchId').value;
+      if (!batchId) {
+        showTemporaryError('batchDetails', "Please enter a batch ID");
+        return;
+      }
+
+      try {
+        document.getElementById('batchDetails').innerHTML = `
+          <div class="loading-spinner"></div>
+          <p>Loading batch details...</p>
+        `;
+
+        const batch = await contract.getBatch(batchId);
+        if (!batch || !batch.harvesting) {
+          throw new Error('Batch does not exist');
+        }
+        displayBatchDetails(batchId, batch, 'batchDetails');
+      } catch (err) {
+        console.error(err);
+        showTemporaryError('batchDetails', `Error: ${err.reason || err.message || 'Batch does not exist'}`);
+      }
+    });
+
+    function displayBatchDetails(batchId, batch, container) {
+      const containerElement = typeof container === 'string' ?
+        document.getElementById(container) : container;
+    
+      const isValid = (value, isNumber = false) => {
+        if (isNumber) {
+          try {
+            if (value === undefined || value === null) return false;
+            if (typeof value === 'number') return value > 0;
+            if (typeof value.gt === 'function') return value.gt(0);
+            return false;
+          } catch {
+            return false;
+          }
+        }
+        return value !== undefined && value !== null && value.toString().trim() !== '';
+      };
+    
+      const addField = (label, value, isNumber = false, suffix = '') => {
+        if (isValid(value, isNumber)) {
+          let displayValue = value;
+          if (isNumber && label === 'Quantity') {
+            displayValue = (typeof value === 'number' ? value : value.toString()) / 1000;
+            displayValue = Number(displayValue.toFixed(2));
+          } else if (isNumber && (label === 'Duration')) {
+            displayValue = (typeof value === 'number' ? value : value.toString()) / 10;
+            displayValue = Number(displayValue.toFixed(1));
+            suffix = displayValue === 1 ? ' hour' : ' hours';
+          } else if (isNumber) {
+            displayValue = typeof value === 'number' ? value : value.toString();
+          }
+          return `<p><strong>${label}:</strong> ${displayValue}${suffix}</p>`;
+        }
+        return '';
+      };
+    
+      const addSection = (title, content) => {
+        if (content.trim()) {
+          return `
+            <h4>${title}</h4>
+            ${content}
+          `;
+        }
+        return '';
+      };
+    
+      let harvestingContent = '';
+      harvestingContent += addField('Farmer', batch.harvesting.farmer);
+      harvestingContent += addField('Harvest Date', batch.harvesting.date);
+      harvestingContent += addField('Location', batch.harvesting.location);
+      harvestingContent += addField('Method', batch.harvesting.method);
+      harvestingContent += addField('Quantity', batch.harvesting.quantity, true, ' kg');
+      harvestingContent += addField('Variety', batch.harvesting.variety);
+    
+      let transportationContent = '';
+      transportationContent += addField('Transporter ID', batch.transportation.transporterId);
+      transportationContent += addField('Duration', batch.transportation.duration, true);
+      transportationContent += addField('Conditions', batch.transportation.conditions);
+      transportationContent += addField('Vehicle Type', batch.transportation.vehicleType);
+    
+      let storageBeforeContent = '';
+      storageBeforeContent += addField('Pressing Facility ID', batch.storageBeforePressing.pressingId);
+      storageBeforeContent += addField('Duration', batch.storageBeforePressing.duration, true);
+      storageBeforeContent += addField('Conditions', batch.storageBeforePressing.conditions);
+      storageBeforeContent += addField('Temperature', batch.storageBeforePressing.temperature, true, '°C');
+      storageBeforeContent += addField('Humidity', batch.storageBeforePressing.humidity, true, '%');
+      storageBeforeContent += addField('Good Olives', batch.storageBeforePressing.goodOlives, true);
+      storageBeforeContent += addField('Bad Olives', batch.storageBeforePressing.badOlives, true);
+    
+      let pressingContent = '';
+      pressingContent += addField('Pressing Date', batch.pressingProcess.date);
+      pressingContent += addField('Pressing Facility ID', batch.pressingProcess.pressingId);
+      pressingContent += addField('Facility', batch.pressingProcess.facility);
+      pressingContent += addField('Method', batch.pressingProcess.method);
+      pressingContent += addField('Conditions', batch.pressingProcess.conditions);
+      pressingContent += addField('Temperature', batch.pressingProcess.temperature, true, '°C');
+      pressingContent += addField('Pressure', batch.pressingProcess.pressure, true, ' bar');
+      pressingContent += addField('Operator', batch.pressingProcess.operatorName);
+    
+      let storageAfterContent = '';
+      storageAfterContent += addField('Tank ID', batch.storageAfterPressing.tankId);
+      storageAfterContent += addField('Pressing Facility ID', batch.storageAfterPressing.pressingId);
+      storageAfterContent += addField('Duration', batch.storageAfterPressing.duration, true);
+      storageAfterContent += addField('Conditions', batch.storageAfterPressing.conditions);
+      storageAfterContent += addField('Temperature', batch.storageAfterPressing.temperature, true, '°C');
+      storageAfterContent += addField('Humidity', batch.storageAfterPressing.humidity, true, '%');
+      storageAfterContent += `<p><strong>Inert Atmosphere:</strong> ${batch.storageAfterPressing.inertAtmosphere ? 'Yes' : 'No'}</p>`;
+    
+      let qualityCheckContent = '';
+      qualityCheckContent += addField('Lab', batch.qualityCheck.lab);
+      qualityCheckContent += addField('ONH ID', batch.qualityCheck.onhId);
+      qualityCheckContent += addField('Acidity', batch.qualityCheck.acidity, true, '%');
+      qualityCheckContent += addField('Quality', batch.qualityCheck.quality);
+      qualityCheckContent += addField('Area', batch.qualityCheck.area);
+      qualityCheckContent += addField('Peroxide Value', batch.qualityCheck.peroxideValue, true, ' meq/kg');
+      qualityCheckContent += `<p><strong>Certified Organic:</strong> ${batch.qualityCheck.certifiedOrganic ? 'Yes' : 'No'}</p>`;
+    
+      const statusContent = `<p><strong>Status:</strong> ${batch.isFinalized ? '✅ Finalized' : '❌ Not Finalized'}</p>`;
+    
+      const html = `
+        <div class="batch-details">
+          <h4>Batch ${batchId} Details</h4>
+          ${addSection('Harvesting Details', harvestingContent)}
+          ${addSection('Transportation Details', transportationContent)}
+          ${addSection('Pre-Pressing Storage', storageBeforeContent)}
+          ${addSection('Pressing Process', pressingContent)}
+          ${addSection('Post-Pressing Storage', storageAfterContent)}
+          ${addSection('Quality Check', qualityCheckContent)}
+          ${statusContent}
+        </div>
+      `;
+    
+      containerElement.innerHTML = html;
+    }
+    
+    document.getElementById('loadMyBatchesBtn').addEventListener('click', async () => {
+      if (!currentAccount) {
+        showTemporaryError('myBatches', "Please connect your wallet first");
+        return;
+      }
+
+      try {
+        document.getElementById('myBatches').innerHTML = `
+          <div class="loading-spinner"></div>
+          <p>Loading your batches...</p>
+        `;
+        
+        const batchIds = await contract.getBatchesByFarmer(currentAccount);
+    
+        if (batchIds.length === 0) {
+          document.getElementById('myBatches').innerHTML = `
+            <div class="status-message">
+              You don't have any batches yet.
+            </div>
+          `;
+          return;
+        }
+    
+        let batchesHTML = '';
+        for (const batchId of batchIds) {
+          const batch = await contract.getBatch(batchId);
+          batchesHTML += `
+            <div class="batch-card">
+              <p><strong>Batch ID:</strong> ${batchId}</p>
+              <p><strong>Farmer:</strong> ${batch.harvesting.farmer || "Not specified"}</p>
+              <p><strong>Harvest Date:</strong> ${batch.harvesting.date || "Not specified"}</p>
+              <p><strong>Status:</strong> ${batch.isFinalized ? "✅ Finalized" : "❌ Not Finalized"}</p>
+              <button class="batch-detail-btn" onclick="loadBatchDetails(${batchId})">View Details</button>
+              <div id="batch-${batchId}-details" style="display:none; margin-top:1rem;"></div>
+            </div>
+          `;
+        }
+    
+        document.getElementById('myBatches').innerHTML = batchesHTML;
+      } catch (err) {
+        console.error(err);
+        showTemporaryError('myBatches', "Failed to load your batches: " + (err.reason || err.message));
+      }
+    });
+
+    window.loadBatchDetails = async function(batchId) {
+      const detailsDiv = document.getElementById(`batch-${batchId}-details`);
+      if (detailsDiv.style.display === "none") {
+        try {
+          detailsDiv.innerHTML = `
+            <div class="loading-spinner" style="width:1rem;height:1rem;"></div>
+            <p>Loading details...</p>
+          `;
+          detailsDiv.style.display = "block";
+          
+          const batch = await contract.getBatch(batchId);
+          displayBatchDetails(batchId, batch, detailsDiv);
+        } catch (err) {
+          console.error(err);
+          detailsDiv.innerHTML = `
+            <div class="status-message status-error">
+              Error loading details: ${err.reason || err.message}
+            </div>
+          `;
+          setTimeout(() => {
+            detailsDiv.innerHTML = '';
+            detailsDiv.style.display = 'none';
+          }, 5000);
+        }
+      } else {
+        detailsDiv.style.display = "none";
+        detailsDiv.innerHTML = '';
+      }
+    };
+
+    document.getElementById('classify-variety-btn').addEventListener('click', function() {
+      const fileInput = document.getElementById('variety-input');
+      fileInput.click();
+    });
+
+    document.getElementById('variety-input').addEventListener('change', function() {
+      if (this.files.length === 0) {
+        showTemporaryError('statusMessage', "Please select an image to classify");
+        return;
+      }
+
+      var formData = new FormData();
+      formData.append('file', this.files[0]);
+
+      $('#variety-loading').css('display', 'block');
+
+      $.ajax({
+        url: 'http://127.0.0.1:8000/classify',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+          let variety = response;
+          document.getElementById('variety').value = variety;
+          $('#variety-loading').css('display', 'none');
+          showTemporaryError('statusMessage', `Variety classified as: ${variety}`, 'success');
+        },
+        error: function(xhr, status, error) {
+          console.error("Error during variety classification:", error);
+          $('#variety-loading').css('display', 'none');
+          showTemporaryError('statusMessage', "Error classifying variety: " + error);
+        }
+      });
+    });
+
+    document.getElementById('measure-quantity-btn').addEventListener('click', function() {
+      const fileInput = document.getElementById('quantity-input');
+      fileInput.click();
+    });
+
+    document.getElementById('quantity-input').addEventListener('change', function() {
+      if (this.files.length === 0) {
+        showTemporaryError('statusMessage', "Please select a video to measure quantity");
+        return;
+      }
+
+      var formData = new FormData();
+      formData.append('file', this.files[0]);
+
+      $('#quantity-loading').css('display', 'block');
+
+      $.ajax({
+        url: 'http://127.0.0.1:8000/quantify',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+          let quantity = response;
+          document.getElementById('quantity').value = quantity;
+          $('#quantity-loading').css('display', 'none');
+          showTemporaryError('statusMessage', `Quantity measured as: ${quantity} kg`, 'success');
+        },
+        error: function(xhr, status, error) {
+          console.error("Error during quantity measurement:", error);
+          $('#quantity-loading').css('display', 'none');
+          showTemporaryError('statusMessage', "Error measuring quantity: " + error);
+        }
+      });
+    });
+
+    window.addEventListener('load', init);
+  </script>
+</body>
+</html>

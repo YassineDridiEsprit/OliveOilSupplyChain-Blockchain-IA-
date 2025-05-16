@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>My Processed Batches - AgriCulture Bootstrap Template</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <!-- Favicons -->
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Marcellus:wght@400&display=swap"
+    rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="assets/css/main.css" rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <style>
+    .error-message {
+      color: #dc3545;
+      font-size: 0.9rem;
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    .loading-spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #10b981;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .status-message {
+      text-align: center;
+      font-size: 1.2rem;
+      color: #6b7280;
+      margin-top: 20px;
+    }
+
+    /* Batch Card Styling */
+    .batch-card {
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .batch-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .batch-card .post-img img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+    }
+
+    .batch-card .meta {
+      padding: 15px 20px;
+      background-color: #f8f9fa;
+    }
+
+    .batch-card .meta .pressing-info {
+      font-size: 1.1rem;
+      color: #1e3a5f;
+      font-weight: 500;
+    }
+
+    .batch-card .post-content {
+      padding: 20px;
+    }
+
+    .batch-card .post-content h5 {
+      font-size: 1.2rem;
+      color: #1e3a5f;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .batch-card .post-content span {
+      font-size: 1rem;
+      color: #4b5563;
+    }
+
+    .batch-card .post-content .border-start {
+      border-color: #d1d5db;
+    }
+
+    .batch-card .readmore {
+      color: #10b981;
+      font-weight: 500;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .batch-card .readmore:hover {
+      color: #059669;
+    }
+
+    @media (max-width: 768px) {
+      .batch-card .post-img img {
+        height: 250px;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .batch-card .post-img img {
+        height: 200px;
+      }
+    }
+  </style>
+</head>
+
+<body class="blog-page">
+
+  <header id="header" class="header d-flex align-items-center position-relative">
+    <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
+      <a href="index3.html" class="logo d-flex align-items-center">
+        <img src="assets/img/logo.png" alt="AgriCulture">
+      </a>
+      <nav id="navmenu" class="navmenu">
+        <ul>
+          <li><a href="index3.html">Home</a></li>
+          <!-- <li><a href="services.html">Field Services</a></li>
+          <li><a href="farmerinsect.html">Insect Detection</a></li> -->
+          <li class="dropdown"><a href="#"><span>BlockChain System</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+            <ul>
+              <!-- <li><a href="farmer22.html">Create a Batch</a></li>
+              <li><a href="transporter22.html">Log Transportation</a></li>
+              <li><a href="loadmybatches.html">Load My Batches</a></li> -->
+              <li><a href="logStorageBeforePressing.html">Log Storage Before Pressing</a></li>
+              <li><a href="logPressingProcess.html">Log Pressing Process</a></li>
+              <li><a href="logStorageAfterPressing.html">Log Storage After Pressing</a></li>
+              <li><a href="loadMyProcessedBatches.html" class="active">My Processed Batches</a></li>
+              <li><a href="batchefindpressing.html">View a Batch</a></li>
+            </ul>
+          </li>
+          <li><a href="about.html">About Us</a></li>
+        </ul>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+      </nav>
+      <div class="dropdown ms-3">
+        <a href="#" class="d-flex align-items-center" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="bi bi-person-circle fs-4"></i>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li><a class="dropdown-item" href="login.html">Logout</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+
+    <!-- Page Title -->
+    <div class="page-title dark-background" data-aos="fade" style="background-image: url(assets/img/page-title-bg.webp);">
+      <div class="container position-relative">
+        <h1>My Processed Batches</h1>
+        <p>View all olive oil batches you have processed.</p>
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a href="index.html">Home</a></li>
+            <li class="current">My Processed Batches</li>
+          </ol>
+        </nav>
+      </div>
+    </div><!-- End Page Title -->
+
+    <section id="blog-posts-2" class="blog-posts-2 section">
+      <div class="container">
+        <div class="mb-3">
+          <p>Connected Account: <span id="connectedAccount"></span></p>
+        </div>
+        <div class="error-message" id="error-message"></div>
+        <div class="row gy-4" id="batchDetailsContent">
+          <div class="col-12 text-center">
+            <div class="loading-spinner"></div>
+            <p class="status-message">Loading your processed batches...</p>
+          </div>
+        </div>
+      </div>
+    </section><!-- /Blog Posts 2 Section -->
+
+  </main>
+
+  <footer id="footer" class="footer dark-background">
+    <div class="footer-top">
+      <div class="container">
+        <div class="row gy-4">
+          <div class="col-lg-4 col-md-6 footer-about">
+            <a href="index.html" class="logo d-flex align-items-center">
+              <span class="sitename">AgriCulture</span>
+            </a>
+            <div class="footer-contact pt-3">
+              <p>A108 Adam Street</p>
+              <p>New York, NY 535022</p>
+              <p class="mt-3"><strong>Phone:</strong> <span>+1 5589 55488 55</span></p>
+              <p><strong>Email:</strong> <span>info@example.com</span></p>
+            </div>
+          </div>
+          <div class="col-lg-2 col-md-3 footer-links">
+            <h4>Useful Links</h4>
+            <ul>
+              <li><a href="#">Home</a></li>
+              <li><a href="#">About us</a></li>
+              <li><a href="#">Services</a></li>
+              <li><a href="#">Terms of service</a></li>
+              <li><a href="#">Privacy policy</a></li>
+            </ul>
+          </div>
+          <div class="col-lg-2 col-md-3 footer-links">
+            <h4>Our Services</h4>
+            <ul>
+              <li><a href="#">Web Design</a></li>
+              <li><a href="#">Web Development</a></li>
+              <li><a href="#">Product Management</a></li>
+              <li><a href="#">Marketing</a></li>
+              <li><a href="#">Graphic Design</a></li>
+            </ul>
+          </div>
+          <div class="col-lg-2 col-md-3 footer-links">
+            <h4>Hic solutasetp</h4>
+            <ul>
+              <li><a href="#">Molestiae accusamus iure</a></li>
+              <li><a href="#">Excepturi dignissimos</a></li>
+              <li><a href="#">Suscipit distinctio</a></li>
+              <li><a href="#">Dilecta</a></li>
+              <li><a href="#">Sit quas consectetur</a></li>
+            </ul>
+          </div>
+          <div class="col-lg-2 col-md-3 footer-links">
+            <h4>Nobis illum</h4>
+            <ul>
+              <li><a href="#">Ipsam</a></li>
+              <li><a href="#">Laudantium dolorum</a></li>
+              <li><a href="#">Dinera</a></li>
+              <li><a href="#">Trodelas</a></li>
+              <li><a href="#">Flexo</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="copyright text-center">
+      <div class="container d-flex flex-column flex-lg-row justify-content-center justify-content-lg-between align-items-center">
+        <div class="d-flex flex-column align-items-center align-items-lg-start">
+          <div>
+            © Copyright <strong><span>MyWebsite</span></strong>. All Rights Reserved
+          </div>
+          <div class="credits">
+            Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a> Distributed by <a href="https://themewagon.com">ThemeWagon</a>
+          </div>
+        </div>
+        <div class="social-links order-first order-lg-last mb-3 mb-lg-0">
+          <a href=""><i class="bi bi-twitter-x"></i></a>
+          <a href=""><i class="bi bi-facebook"></i></a>
+          <a href=""><i class="bi bi-instagram"></i></a>
+          <a href=""><i class="bi bi-linkedin"></i></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Preloader -->
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/aos/aos.js"></script>
+  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <!-- Main JS File -->
+  <script src="assets/js/main.js"></script>
+
+  <script>
+    const contractAddress = '0xA7cf92E595D1584C0fdCaDB87Ee48a39d8a65bc9';
+    const contractABI = [
+      {
+        "inputs": [
+          { "internalType": "uint256", "name": "batchId", "type": "uint256" }
+        ],
+        "name": "getBatch",
+        "outputs": [
+          {
+            "components": [
+              {
+                "components": [
+                  { "internalType": "string", "name": "farmer", "type": "string" },
+                  { "internalType": "string", "name": "date", "type": "string" },
+                  { "internalType": "string", "name": "location", "type": "string" },
+                  { "internalType": "string", "name": "method", "type": "string" },
+                  { "internalType": "uint256", "name": "quantity", "type": "uint256" },
+                  { "internalType": "string", "name": "variety", "type": "string" }
+                ],
+                "internalType": "struct SupplyChain.Harvesting",
+                "name": "harvesting",
+                "type": "tuple"
+              },
+              {
+                "components": [
+                  { "internalType": "uint256", "name": "duration", "type": "uint256" },
+                  { "internalType": "string", "name": "conditions", "type": "string" },
+                  { "internalType": "string", "name": "transporterId", "type": "string" },
+                  { "internalType": "string", "name": "vehicleType", "type": "string" }
+                ],
+                "internalType": "struct SupplyChain.Transportation",
+                "name": "transportation",
+                "type": "tuple"
+              },
+              {
+                "components": [
+                  { "internalType": "uint256", "name": "duration", "type": "uint256" },
+                  { "internalType": "string", "name": "pressingId", "type": "string" },
+                  { "internalType": "string", "name": "conditions", "type": "string" },
+                  { "internalType": "uint256", "name": "temperature", "type": "uint256" },
+                  { "internalType": "uint256", "name": "humidity", "type": "uint256" },
+                  { "internalType": "uint256", "name": "goodOlives", "type": "uint256" },
+                  { "internalType": "uint256", "name": "badOlives", "type": "uint256" }
+                ],
+                "internalType": "struct SupplyChain.StorageBeforePressing",
+                "name": "storageBeforePressing",
+                "type": "tuple"
+              },
+              {
+                "components": [
+                  { "internalType": "string", "name": "date", "type": "string" },
+                  { "internalType": "string", "name": "pressingId", "type": "string" },
+                  { "internalType": "string", "name": "facility", "type": "string" },
+                  { "internalType": "string", "name": "method", "type": "string" },
+                  { "internalType": "string", "name": "conditions", "type": "string" },
+                  { "internalType": "uint256", "name": "temperature", "type": "uint256" },
+                  { "internalType": "uint256", "name": "pressure", "type": "uint256" },
+                  { "internalType": "string", "name": "operatorName", "type": "string" }
+                ],
+                "internalType": "struct SupplyChain.PressingProcess",
+                "name": "pressingProcess",
+                "type": "tuple"
+              },
+              {
+                "components": [
+                  { "internalType": "string", "name": "tankId", "type": "string" },
+                  { "internalType": "string", "name": "pressingId", "type": "string" },
+                  { "internalType": "uint256", "name": "duration", "type": "uint256" },
+                  { "internalType": "string", "name": "conditions", "type": "string" },
+                  { "internalType": "uint256", "name": "temperature", "type": "uint256" },
+                  { "internalType": "uint256", "name": "humidity", "type": "uint256" },
+                  { "internalType": "bool", "name": "inertAtmosphere", "type": "bool" }
+                ],
+                "internalType": "struct SupplyChain.StorageAfterPressing",
+                "name": "storageAfterPressing",
+                "type": "tuple"
+              },
+              {
+                "components": [
+                  { "internalType": "string", "name": "lab", "type": "string" },
+                  { "internalType": "string", "name": "onhId", "type": "string" },
+                  { "internalType": "uint256", "name": "acidity", "type": "uint256" },
+                  { "internalType": "string", "name": "quality", "type": "string" },
+                  { "internalType": "string", "name": "area", "type": "string" },
+                  { "internalType": "uint256", "name": "peroxideValue", "type": "uint256" },
+                  { "internalType": "bool", "name": "certifiedOrganic", "type": "bool" }
+                ],
+                "internalType": "struct SupplyChain.QualityCheck",
+                "name": "qualityCheck",
+                "type": "tuple"
+              },
+              { "internalType": "bool", "name": "isFinalized", "type": "boole" , "type": "bool" }
+            ],
+            "internalType": "struct SupplyChain.Batch",
+            "name": "",
+            "type": "tuple"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          { "internalType": "string", "name": "pressingId", "type": "string" }
+        ],
+        "name": "getBatchesByPressingId",
+        "outputs": [
+          { "internalType": "uint256[]", "name": "", "type": "uint256[]" }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      }
+    ];
+
+    let provider;
+    let signer;
+    let contract;
+    let currentAccount;
+
+    function toChecksumAddress(address) {
+      return ethers.utils.getAddress(address.toLowerCase());
+    }
+
+    function showTemporaryError(elementId, message) {
+      const element = document.getElementById(elementId);
+      element.innerHTML = `<div class="error-message">${message}</div>`;
+      setTimeout(() => {
+        element.innerHTML = '';
+      }, 5000);
+    }
+
+    async function init() {
+      if (window.ethereum) {
+        try {
+          provider = new ethers.providers.Web3Provider(window.ethereum);
+          const accounts = await provider.send("eth_requestAccounts", []);
+          if (accounts.length === 0) {
+            showTemporaryError('error-message', "No Ethereum account connected. Please connect MetaMask.");
+            return;
+          }
+          signer = provider.getSigner();
+          contract = new ethers.Contract(contractAddress, contractABI, signer);
+          
+          currentAccount = await signer.getAddress();
+          const checksumAddress = toChecksumAddress(currentAccount);
+          document.getElementById('connectedAccount').textContent = checksumAddress;
+          console.log("Connected with account:", checksumAddress);
+
+          // Auto-load processed batches
+          loadProcessedBatches();
+
+          window.ethereum.on('accountsChanged', async (accounts) => {
+            if (accounts.length > 0) {
+              currentAccount = accounts[0];
+              const newChecksumAddress = toChecksumAddress(currentAccount);
+              document.getElementById('connectedAccount').textContent = newChecksumAddress;
+              console.log("Switched to account:", newChecksumAddress);
+              loadProcessedBatches();
+            } else {
+              showTemporaryError('error-message', "No account connected. Please reconnect MetaMask.");
+              document.getElementById('batchDetailsContent').innerHTML = '';
+              document.getElementById('connectedAccount').textContent = '';
+            }
+          });
+        } catch (error) {
+          console.error("Error connecting:", error);
+          showTemporaryError('error-message', "Error connecting to Ethereum: " + error.message);
+        }
+      } else {
+        showTemporaryError('error-message', "Please install MetaMask to use this application!");
+      }
+    }
+
+    async function loadProcessedBatches() {
+      if (!currentAccount) {
+        showTemporaryError('error-message', "Please connect your wallet first");
+        document.getElementById('batchDetailsContent').innerHTML = '<div class="col-12 text-center"><p class="status-message">Please connect your wallet to view processed batches.</p></div>';
+        return;
+      }
+
+      try {
+        document.getElementById('batchDetailsContent').innerHTML = `
+          <div class="col-12 text-center">
+            <div class="loading-spinner"></div>
+            <p class="status-message">Loading your processed batches...</p>
+          </div>
+        `;
+        
+        const checksumAddress = toChecksumAddress(currentAccount);
+        const batchIds = await contract.getBatchesByPressingId(checksumAddress);
+    
+        if (batchIds.length === 0) {
+          document.getElementById('batchDetailsContent').innerHTML = `
+            <div class="col-12 text-center">
+              <p class="status-message">You haven't processed any batches yet.</p>
+            </div>
+          `;
+          return;
+        }
+    
+        let batchesHTML = '';
+        for (const batchId of batchIds) {
+          const batch = await contract.getBatch(batchId);
+          const status = batch.isFinalized ? 'Completed' : 'In Progress';
+          const pressingId = batch.storageBeforePressing.pressingId || batch.pressingProcess.pressingId || batch.storageAfterPressing.pressingId || 'Unknown';
+          batchesHTML += `
+            <div class="col-lg-4">
+              <article class="batch-card position-relative h-100">
+                <div class="post-img position-relative overflow-hidden">
+                  <img src="assets/img/blog/oilveoil.jpg" class="img-fluid" alt="Batch Image">
+                </div>
+                <div class="meta d-flex align-items-end">
+                  <div class="d-flex align-items-center pressing-info">
+                    <i class="bi bi-gear-fill me-2"></i>
+                    <span>${pressingId.slice(0, 6)}...${pressingId.slice(-4)}</span>
+                  </div>
+                </div>
+                <div class="post-content d-flex flex-column">
+                  <div class="d-flex justify-content-between mt-2">
+                    <div class="d-flex flex-column text-center w-50">
+                      <h5 class="mb-0 font-weight-bold">Batch ID</h5>
+                      <span>${batchId}</span>
+                    </div>
+                    <div class="border-start" style="height: 40px;"></div>
+                    <div class="d-flex flex-column text-center w-50">
+                      <h5 class="mb-0 font-weight-bold">Status</h5>
+                      <span>${status}</span>
+                    </div>
+                  </div>
+                  <div class="d-flex justify-content-start mt-3">
+                    <a href="batchdetailspressing.html?batchId=${batchId}" class="readmore stretched-link">
+                      <span>More Details</span>
+                      <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                  </div>
+                </div>
+              </article>
+            </div>
+          `;
+        }
+    
+        document.getElementById('batchDetailsContent').innerHTML = batchesHTML;
+      } catch (err) {
+        console.error(err);
+        showTemporaryError('error-message', `Failed to load processed batches: ${err.reason || err.message}`);
+        document.getElementById('batchDetailsContent').innerHTML = '<div class="col-12 text-center"><p class="status-message">Failed to load processed batches.</p></div>';
+      }
+    }
+
+    window.addEventListener('load', init);
+  </script>
+</body>
+</html>

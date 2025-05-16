@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Batch Details - Olive Oil Traceability</title>
+    <meta name="description" content="Olive Oil Batch Details">
+    <meta name="keywords" content="olive oil, traceability, batch tracking">
+
+    <!-- Favicons -->
+    <link href="assets/img/favicon.png" rel="icon">
+    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Marcellus:wght@400&display=swap"
+        rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+    <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+
+    <!-- Main CSS File -->
+    <link href="assets/css/main.css" rel="stylesheet">
+
+    <!-- Vendor JS Files for QR Code and Encryption -->
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+
+    <!-- Inline CSS for Card Styling and Timeline -->
+    <style>
+        :root {
+            --card-bg: #ffffff;
+            --card-text: #095215;
+            --content-text: #4a4a4a;
+            --primary-color: #095215;
+            --secondary-color: #f8f3e6;
+            --accent-color: #d4a017;
+            --border-radius: 12px;
+            --box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+            --timeline-line: #e0e0e0;
+        }
+
+        .service-item {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 0;
+            margin-bottom: 2rem;
+            border-top: 4px solid var(--primary-color);
+            height: 100%;
+            transition: var(--transition);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .service-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .service-header {
+            background-color: var(--secondary-color);
+            color: var(--card-text);
+            padding: 1.25rem;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid rgba(9, 82, 21, 0.1);
+        }
+
+        .service-header .number {
+            font-size: 18px;
+            font-weight: 700;
+            margin-right: 12px;
+            color: var(--accent-color);
+            background: rgba(212, 160, 23, 0.1);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .service-header i {
+            font-size: 24px;
+            margin-right: 10px;
+            color: var(--primary-color);
+        }
+
+        .service-header h3 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .service-item-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .service-item-content p {
+            margin: 0.75rem 0;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--content-text);
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .service-item-content p strong {
+            color: var(--primary-color);
+            font-weight: 600;
+            min-width: 160px;
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        .service-item-content p span {
+            flex: 1;
+            word-break: break-word;
+        }
+
+        .no-data-message {
+            font-size: 1.1rem;
+            color: #666;
+            padding: 2rem;
+            text-align: center;
+            background: #f9f9f9;
+            border-radius: var(--border-radius);
+        }
+
+        .batch-id-badge {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 1.5rem;
+        }
+
+        .status-badge {
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-complete {
+            background: #e6f7e6;
+            color: #2e7d32;
+        }
+
+        .status-incomplete {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .section-title h2 {
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .section-title h2:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--accent-color);
+        }
+
+        /* QR Code Upload Styling */
+        .upload-container {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        #file-input {
+            display: none;
+        }
+
+        .upload-label {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .upload-label:hover {
+            background-color: #073d10;
+        }
+
+        #file-name {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--content-text);
+        }
+
+        #scan-result {
+            margin: 1rem 0;
+        }
+
+        .status-message {
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            transition: opacity 0.5s ease;
+            text-align: center;
+        }
+
+        .status-success {
+            background-color: #e6f7e6;
+            color: #2e7d32;
+        }
+
+        .status-error {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+
+        .status-warning {
+            background-color: #fff8e1;
+            color: #ff8f00;
+        }
+
+        /* Timeline Styling */
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .timeline::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 10px;
+            width: 2px;
+            background: var(--timeline-line);
+        }
+
+        .stage-card {
+            position: relative;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-left: 4px solid var(--accent-color);
+            transition: var(--transition);
+        }
+
+        .stage-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .stage-card::before {
+            content: "";
+            position: absolute;
+            top: 20px;
+            left: -30px;
+            width: 12px;
+            height: 12px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+
+        .stage-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .stage-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+        }
+
+        .stage-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            font-weight: 600;
+            flex-grow: 1;
+        }
+
+        .stage-date {
+            margin-left: auto;
+            color: var(--accent-color);
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .stage-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .detail-item {
+            background: var(--secondary-color);
+            padding: 0.75rem;
+            border-radius: 6px;
+            border-left: 3px solid var(--primary-color);
+        }
+
+        .detail-item strong {
+            display: block;
+            color: var(--primary-color);
+            margin-bottom: 0.3rem;
+            font-size: 0.9rem;
+            word-break: break-word;
+            max-width: 100%;
+        }
+
+        .address {
+            font-family: monospace;
+            background: #e8f5e9;
+            padding: 0.3rem 0.5rem;
+            border-radius: 4px;
+            word-break: break-all;
+            font-size: 0.85rem;
+        }
+
+        .conditions-good {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+
+        .conditions-fair {
+            color: #ff8f00;
+            font-weight: bold;
+        }
+
+        .conditions-poor {
+            color: #c62828;
+            font-weight: bold;
+        }
+
+        /* Fraud Detection Styling */
+        .fraud-section {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            background-color: #fff3e0;
+            border-left: 4px solid #ff9800;
+        }
+
+        .fraud-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .fraud-icon {
+            margin-right: 10px;
+            width: 24px;
+            height: 24px;
+        }
+
+        .fraud-indicator {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-left: auto;
+        }
+
+        .fraud-safe {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .fraud-warning {
+            background-color: #fff8e1;
+            color: #ff8f00;
+        }
+
+        .fraud-danger {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+
+        .fraud-details {
+            margin-top: 1rem;
+        }
+
+        .fraud-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 4px;
+        }
+
+        .fraud-item-safe {
+            background-color: #e8f5e9;
+        }
+
+        .fraud-item-warning {
+            background-color: #fff8e1;
+        }
+
+        .fraud-item-danger {
+            background-color: #ffebee;
+        }
+
+        .fraud-item-icon {
+            margin-right: 10px;
+            width: 20px;
+            height: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .service-item {
+                margin-bottom: 1.5rem;
+            }
+
+            .service-item-content p {
+                flex-direction: column;
+            }
+
+            .service-item-content p strong {
+                min-width: 100%;
+                margin-bottom: 0.25rem;
+            }
+
+            .stage-details {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline {
+                padding-left: 20px;
+            }
+
+            .stage-card::before {
+                left: -20px;
+            }
+        }
+
+        @media (min-width: 992px) {
+            .service-item {
+                min-height: 380px;
+            }
+        }
+    </style>
+</head>
+
+<body class="blog-page">
+
+  <header id="header" class="header d-flex align-items-center position-relative">
+    <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
+
+      <a href="indexcl.html" class="logo d-flex align-items-center">
+        <!-- Uncomment the line below if you also wish to use an image logo -->
+        <img src="assets/img/logo.png" alt="AgriCulture">
+        <!-- <h1 class="sitename">AgriCulture</h1>  -->
+      </a>
+
+      <nav id="navmenu" class="navmenu">
+        <ul>
+          <li><a href="indexcl.html" class="active">Home</a></li>
+          <li><a href="trace.html" class="active">Check Olive Oil</a></li>
+          <li><a href="batchefindcl.html" class="active">Find Batch</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+      </nav>
+
+    </div>
+  </header>
+
+    <main class="main">
+
+        <!-- Page Title -->
+        <div class="page-title dark-background" data-aos="fade"
+            style="background-image: url(assets/img/page-title-bg.webp);">
+            <div class="container position-relative">
+                <h1>Batch Details</h1>
+                <nav class="breadcrumbs">
+                    <ol>
+                        <li><a href="index.html">Home</a></li>
+                        <li class="current">Batch Details</li>
+                    </ol>
+                </nav>
+            </div>
+        </div><!-- End Page Title -->
+
+        <!-- QR Code Upload Section -->
+        <section id="qr-upload" class="section">
+            <div class="container">
+                <div class="card p-4" data-aos="fade-up">
+                    <h2 class="content-title mb-4">Trace Product Journey</h2>
+                    <div class="upload-container">
+                        <label for="file-input" class="upload-label">Upload QR Code Image</label>
+                        <input type="file" id="file-input" accept="image/*">
+                        <div id="file-name"></div>
+                    </div>
+                    <div id="scan-result" class="status-message"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About 3 Section -->
+        <section id="about-3" class="about-3 section">
+            <div class="container">
+                <div class="row gy-4 justify-content-between align-items-center">
+                    <div class="col-lg-6 order-lg-2 position-relative" data-aos="zoom-out">
+                        <img src="assets/img/img_sq_1.jpg" alt="Image" class="img-fluid rounded-lg">
+                        <a href="https://www.youtube.com/watch?v=Y7f98aduVJ8" class="glightbox pulsating-play-btn">
+                            <span class="play"><i class="bi bi-play-fill"></i></span>
+                        </a>
+                    </div>
+                    <div class="col-lg-5 order-lg-1" data-aos="fade-up" data-aos-delay="100">
+                        <h2 class="content-title mb-4">Batch Journey</h2>
+                        <p class="mb-4">
+                            Discover the complete story behind your olive oil. Each batch is meticulously documented—from harvest
+                            to bottle—ensuring full traceability, premium quality, and authenticity at every step of the journey.
+                        </p>
+                        <ul class="list-unstyled list-check">
+                            <li>Detailed harvest information including date, location, and quantity</li>
+                            <li>Transportation conditions and duration</li>
+                            <li>Complete processing stages from storage to pressing</li>
+                            <li>Quality assurance and lab testing results</li>
+                        </ul>
+                        <div id="batchDetails" class="mt-4">
+                            <div class="batch-id-badge">Batch ID: <span id="batchIdDisplay">Loading...</span></div>
+                            <div id="batchStatus" class="status-badge status-incomplete">Status: Loading...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section><!-- /About 3 Section -->
+
+        <!-- Supply Chain Journey Section -->
+        <section id="services" class="services section">
+            <div class="container section-title" data-aos="fade-up">
+                <h2>Supply Chain Journey</h2>
+                <p>Trace every step of your olive oil's production process with our transparent supply chain tracking.</p>
+            </div>
+            <div class="content">
+                <div class="container">
+                    <div id="stages" class="timeline"></div>
+                    <div id="fraudDetection" class="fraud-section" style="display: none">
+                        <div class="fraud-header">
+                            <svg class="fraud-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ff9800">
+                                <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+                            </svg>
+                            <h3>Fraud Detection Analysis</h3>
+                            <div id="fraudStatus" class="fraud-indicator fraud-safe">No Issues Detected</div>
+                        </div>
+                        <div id="fraudDetails" class="fraud-details"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer id="footer" class="footer dark-background">
+        <div class="footer-top">
+            <div class="container">
+                <div class="row gy-4">
+                    <div class="col-lg-4 col-md-6 footer-about">
+                        <a href="index.html" class="logo d-flex align-items-center">
+                            <span class="sitename">Olive Oil Traceability</span>
+                        </a>
+                        <div class="footer-contact pt-3">
+                            <p>Olive Farms Network</p>
+                            <p>Olive City, OC 12345</p>
+                            <p class="mt-3"><strong>Phone:</strong> <span>+1 555-OLIVE-55</span></p>
+                            <p><strong>Email:</strong> <span><a
+                                        href="mailto:support@oliveoiltrace.com">support@oliveoiltrace.com</a></span></p>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-3 footer-links">
+                        <h4>Useful Links</h4>
+                        <ul>
+                            <li><a href="#">Home</a></li>
+                            <li><a href="#">About Us</a></li>
+                            <li><a href="#">Services</a></li>
+                            <li><a href="#">Contact</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="copyright text-center">
+            <div
+                class="container d-flex flex-column flex-lg-row justify-content-center justify-content-lg-between align-items-center">
+                <div class="d-flex flex-column align-items-center align-items-lg-start">
+                    <div>© 2025 Olive Oil Traceability System. All Rights Reserved</div>
+                    <div class="credits">Designed by <a href="#">OliveTech</a></div>
+                </div>
+                <div class="social-links order-first order-lg-last mb-3 mb-lg-0">
+                    <a href="#"><i class="bi bi-twitter-x"></i></a>
+                    <a href="#"><i class="bi bi-facebook"></i></a>
+                    <a href="#"><i class="bi bi-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll Top -->
+    <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
+            class="bi bi-arrow-up-short"></i></a>
+
+    <!-- Vendor JS Files -->
+    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/vendor/aos/aos.js"></script>
+    <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+    <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+
+    <!-- Main JS File -->
+    <script src="assets/js/main.js"></script>
+
+    <script>
+        const contractAddress = '0xA7cf92E595D1584C0fdCaDB87Ee48a39d8a65bc9';
+        const contractABI = [
+            {
+                "inputs": [
+                    { "internalType": "uint256", "name": "batchId", "type": "uint256" }
+                ],
+                "name": "getBatch",
+                "outputs": [
+                    {
+                        "components": [
+                            {
+                                "components": [
+                                    { "internalType": "string", "name": "farmer", "type": "string" },
+                                    { "internalType": "string", "name": "date", "type": "string" },
+                                    { "internalType": "string", "name": "location", "type": "string" },
+                                    { "internalType": "string", "name": "method", "type": "string" },
+                                    { "internalType": "uint256", "name": "quantity", "type": "uint256" },
+                                    { "internalType": "string", "name": "variety", "type": "string" }
+                                ],
+                                "internalType": "struct SupplyChain.Harvesting",
+                                "name": "harvesting",
+                                "type": "tuple"
+                            },
+                            {
+                                "components": [
+                                    { "internalType": "uint256", "name": "duration", "type": "uint256" },
+                                    { "internalType": "string", "name": "transporterId", "type": "string" },
+                                    { "internalType": "string", "name": "conditions", "type": "string" },
+                                    { "internalType": "string", "name": "vehicleType", "type": "string" }
+                                ],
+                                "internalType": "struct SupplyChain.Transportation",
+                                "name": "transportation",
+                                "type": "tuple"
+                            },
+                            {
+                                "components": [
+                                    { "internalType": "uint256", "name": "duration", "type": "uint256" },
+                                    { "internalType": "string", "name": "pressingId", "type": "string" },
+                                    { "internalType": "string", "name": "conditions", "type": "string" },
+                                    { "internalType": "uint256", "name": "temperature", "type": "uint256" },
+                                    { "internalType": "uint256", "name": "humidity", "type": "uint256" },
+                                    { "internalType": "uint256", "name": "goodOlives", "type": "uint256" },
+                                    { "internalType": "uint256", "name": "badOlives", "type": "uint256" }
+                                ],
+                                "internalType": "struct SupplyChain.StorageBeforePressing",
+                                "name": "storageBeforePressing",
+                                "type": "tuple"
+                            },
+                            {
+                                "components": [
+                                    { "internalType": "string", "name": "date", "type": "string" },
+                                    { "internalType": "string", "name": "pressingId", "type": "string" },
+                                    { "internalType": "string", "name": "facility", "type": "string" },
+                                    { "internalType": "string", "name": "method", "type": "string" },
+                                    { "internalType": "string", "name": "conditions", "type": "string" },
+                                    { "internalType": "uint256", "name": "temperature", "type": "uint256" },
+                                    { "internalType": "uint256", "name": "pressure", "type": "uint256" },
+                                    { "internalType": "string", "name": "operatorName", "type": "string" }
+                                ],
+                                "internalType": "struct SupplyChain.PressingProcess",
+                                "name": "pressingProcess",
+                                "type": "tuple"
+                            },
+                            {
+                                "components": [
+                                    { "internalType": "string", "name": "tankId", "type": "string" },
+                                    { "internalType": "string", "name": "pressingId", "type": "string" },
+                                    { "internalType": "uint256", "name": "duration", "type": "uint256" },
+                                    { "internalType": "string", "name": "conditions", "type": "string" },
+                                    { "internalType": "uint256", "name": "temperature", "type": "uint256" },
+                                    { "internalType": "uint256", "name": "humidity", "type": "uint256" },
+                                    { "internalType": "bool", "name": "inertAtmosphere", "type": "bool" }
+                                ],
+                                "internalType": "struct SupplyChain.StorageAfterPressing",
+                                "name": "storageAfterPressing",
+                                "type": "tuple"
+                            },
+                            {
+                                "components": [
+                                    { "internalType": "string", "name": "lab", "type": "string" },
+                                    { "internalType": "string", "name": "onhId", "type": "string" },
+                                    { "internalType": "uint256", "name": "acidity", "type": "uint256" },
+                                    { "internalType": "string", "name": "quality", "type": "string" },
+                                    { "internalType": "string", "name": "area", "type": "string" },
+                                    { "internalType": "uint256", "name": "peroxideValue", "type": "uint256" },
+                                    { "internalType": "bool", "name": "certifiedOrganic", "type": "bool" }
+                                ],
+                                "internalType": "struct SupplyChain.QualityCheck",
+                                "name": "qualityCheck",
+                                "type": "tuple"
+                            },
+                            { "internalType": "bool", "name": "isFinalized", "type": "bool" },
+                            { "internalType": "address", "name": "creator", "type": "address" },
+                            { "internalType": "uint256", "name": "creationTimestamp", "type": "uint256" }
+                        ],
+                        "internalType": "struct SupplyChain.Batch",
+                        "name": "",
+                        "type": "tuple"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            }
+        ];
+
+        let provider;
+        let contract;
+
+        // Initialize the app
+        async function init() {
+            // Check for Web3 provider (MetaMask)
+            if (!window.ethereum) {
+                showMessage("scan-result", "Please install MetaMask to use this application.", "error");
+                return;
+            }
+
+            try {
+                provider = new ethers.providers.Web3Provider(window.ethereum);
+                contract = new ethers.Contract(contractAddress, contractABI, provider);
+
+                // Check for batch ID in URL
+                const urlParams = new URLSearchParams(window.location.search);
+                const batchId = urlParams.get("batchId");
+                
+                if (batchId) {
+                    document.getElementById('batchIdDisplay').textContent = batchId;
+                    viewBatchDetails(batchId);
+                }
+
+                // Setup file upload
+                document.getElementById("file-input").addEventListener("change", handleFileUpload);
+            } catch (err) {
+                showMessage("scan-result", `Error initializing application: ${err.message}`, "error");
+            }
+        }
+
+        // Decrypt QR code data
+        function decryptQRCodeData(encryptedData) {
+            try {
+                const key = CryptoJS.enc.Hex.parse("0123456789abcdef0123456789abcdef");
+                const iv = CryptoJS.enc.Hex.parse("abcdef9876543210abcdef9876543210");
+                
+                const decrypted = CryptoJS.AES.decrypt(encryptedData, key, { iv: iv });
+                const decryptedText = decrypted.toString(CryptoJS.enc.Utf8);
+                
+                if (!decryptedText) {
+                    throw new Error("Decryption failed");
+                }
+                
+                const params = new URLSearchParams(decryptedText);
+                const batchId = params.get("batchId");
+                
+                if (!batchId) {
+                    throw new Error("Batch ID not found in decrypted data");
+                }
+                
+                return batchId;
+            } catch (error) {
+                throw new Error("Failed to decrypt QR code data: " + error.message);
+            }
+        }
+
+        // Handle QR code file upload
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            document.getElementById("file-name").textContent = file.name;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement("canvas");
+                    const context = canvas.getContext("2d");
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    context.drawImage(img, 0, 0);
+                    
+                    const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+                    const code = jsQR(imageData.data, imageData.width, imageData.height, {
+                        inversionAttempts: "dontInvert"
+                    });
+                    
+                    if (code) {
+                        try {
+                            const batchId = decryptQRCodeData(code.data);
+                            showMessage("scan-result", "QR code scanned successfully!", "success");
+                            document.getElementById('batchIdDisplay').textContent = batchId;
+                            viewBatchDetails(batchId);
+                            // Reset file input
+                            event.target.value = "";
+                            document.getElementById("file-name").textContent = "";
+                            return;
+                        } catch (e) {
+                            if (/^\d+$/.test(code.data)) {
+                                showMessage("scan-result", "QR code scanned successfully!", "success");
+                                document.getElementById('batchIdDisplay').textContent = code.data;
+                                viewBatchDetails(code.data);
+                                event.target.value = "";
+                                document.getElementById("file-name").textContent = "";
+                                return;
+                            }
+                            showMessage("scan-result", e.message, "error");
+                        }
+                    }
+                    
+                    showMessage("scan-result", "No valid QR code found in the image", "error");
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // View batch details
+        async function viewBatchDetails(batchId) {
+            showMessage("scan-result", "Loading batch details...");
+            
+            try {
+                const batch = await contract.getBatch(batchId);
+                if (!batch || !batch.harvesting) {
+                    throw new Error("Batch not found");
+                }
+                
+                // Update status badge
+                const statusBadge = document.getElementById('batchStatus');
+                statusBadge.textContent = batch.isFinalized ? 'Status: Complete' : 'Status: In Progress';
+                statusBadge.className = batch.isFinalized ? 'status-badge status-complete' : 'status-badge status-incomplete';
+                
+                displayStages(batchId, batch);
+                checkForFraud(batchId, batch);
+                document.getElementById("stages").parentElement.style.display = "block";
+                showMessage("scan-result", "", "clear");
+            } catch (err) {
+                console.error(err);
+                showMessage("scan-result", `Error: ${err.reason || err.message || "Batch not found"}`, "error");
+            }
+        }
+
+        // Display stages in timeline format
+        function displayStages(batchId, batch) {
+            const stagesContainer = document.getElementById("stages");
+            const fragment = document.createDocumentFragment();
+
+            // Helper function to create stage cards
+            const createStageCard = (title, date, details, iconPath) => {
+                const stageCard = document.createElement("div");
+                stageCard.className = "stage-card";
+
+                let detailsHTML = '<div class="stage-details">';
+                for (const [key, value] of Object.entries(details)) {
+                    if (value === undefined || value === null) continue;
+
+                    let formattedValue = value;
+                    let extraClass = "";
+
+                    if (key.toLowerCase().includes("id") && typeof value === "string" && value.startsWith("0x")) {
+                        formattedValue = `<span class="address">${value}</span>`;
+                    } else if (key.toLowerCase() === "conditions") {
+                        const cond = value.toString().toLowerCase();
+                        if (cond.includes("good")) extraClass = "conditions-good";
+                        else if (cond.includes("fair")) extraClass = "conditions-fair";
+                        else if (cond.includes("poor")) extraClass = "conditions-poor";
+                    } else if (key.toLowerCase() === "duration") {
+                        formattedValue = `${(Number(value) / 10).toFixed(1)} hours`;
+                    } else if (key.toLowerCase() === "temperature") {
+                        formattedValue = `${(Number(value) / 10).toFixed(1)}°C`;
+                    } else if (key.toLowerCase() === "humidity") {
+                        formattedValue = `${(Number(value) / 10).toFixed(1)}%`;
+                    } else if (key.toLowerCase() === "pressure") {
+                        formattedValue = `${value} bar`;
+                    } else if (key.toLowerCase() === "acidity") {
+                        formattedValue = `${(Number(value) / 10).toFixed(1)}%`;
+                    } else if (key.toLowerCase() === "peroxidevalue") {
+                        formattedValue = `${(Number(value) / 426.67).toFixed(1)} meq O2/kg`;
+                    } else if (typeof value === "boolean") {
+                        formattedValue = value ? "Yes" : "No";
+                    } else if (key.toLowerCase() === "quantity") {
+                        formattedValue = `${(Number(value) / 1000).toFixed(2)} kg`;
+                    }
+
+                    if (key.toLowerCase() === "farmer" && typeof formattedValue === "string") {
+                        formattedValue = `<span class="address" title="${formattedValue}">${formattedValue}</span>`;
+                    }
+
+                    detailsHTML += `
+                        <div class="detail-item">
+                            <strong>${formatKey(key)}</strong>
+                            <span class="${extraClass}">${formattedValue}</span>
+                        </div>
+                    `;
+                }
+                detailsHTML += "</div>";
+
+                stageCard.innerHTML = `
+                    <div class="stage-header">
+                        <svg class="stage-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="var(--primary-color)">
+                            <path d="${iconPath || 'M12 12m-10 0a10 10 0 1 0 20 0a10 10 0 1 0 -20 0'}" />
+                        </svg>
+                        <div class="stage-title">${title}</div>
+                        ${date ? `<span class="stage-date">${date}</span>` : ""}
+                    </div>
+                    ${detailsHTML}
+                `;
+                fragment.appendChild(stageCard);
+            };
+
+            // Helper to format keys
+            function formatKey(key) {
+                return key
+                    .replace(/([A-Z])/g, " $1")
+                    .replace(/^./, str => str.toUpperCase());
+            }
+
+            // Harvesting
+            if (batch.harvesting && batch.harvesting.date) {
+                createStageCard(
+                    "Harvesting",
+                    batch.harvesting.date,
+                    {
+                        farmer: batch.harvesting.farmer,
+                        location: batch.harvesting.location,
+                        method: batch.harvesting.method,
+                        quantity: batch.harvesting.quantity,
+                        variety: batch.harvesting.variety
+                    },
+                    "M19.5 12c0-1.32-.84-2.44-2.02-2.86l-.93-3.08C16.08 5.13 14.61 4 12.9 4H11.1C9.39 4 7.92 5.13 7.45 7.06l-.93 3.08C5.34 9.56 4.5 10.68 4.5 12c0 1.32.84 2.44 2.02 2.86l.93 3.08c.47 1.93 1.94 3.06 3.65 3.06h1.8c1.71 0 3.28-1.13 3.75-3.06l.93-3.08c1.18-.42 2.02-1.54 2.02-2.86zM12 15c-1.65 0-3-1.35-3-3s1.35-3 3-3 3 1.35 3 3-1.35 3-3 3z"
+                );
+            }
+
+            // Transportation
+            if (batch.transportation && batch.transportation.duration) {
+                createStageCard(
+                    "Transportation",
+                    "",
+                    {
+                        transporterId: batch.transportation.conditions,
+                        duration: batch.transportation.duration,
+                        vehicleType: batch.transportation.vehicleType,
+                        conditions: batch.transportation.transporterId
+                    },
+                    "M18 18.5c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5-1.5.67-1.5 1.5.67 1.5 1.5 1.5zm1.5-9H17V12h4.46L19.5 9.5zM6 18.5c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5-1.5.67-1.5 1.5.67 1.5 1.5 1.5zM20 8l3 4v5h-2c0 1.66-1.34 3-3 3s-3-1.34-3-3H9c0 1.66-1.34 3-3 3s-3-1.34-3-3H1V6c0-1.11.89-2 2-2h14v4h3z"
+                );
+            }
+
+            // Storage Before Pressing
+            if (batch.storageBeforePressing && batch.storageBeforePressing.duration) {
+                createStageCard(
+                    "Storage Before Pressing",
+                    "",
+                    {
+                        pressingId: batch.storageBeforePressing.pressingId,
+                        duration: batch.storageBeforePressing.duration,
+                        temperature: batch.storageBeforePressing.temperature,
+                        humidity: batch.storageBeforePressing.humidity,
+                        conditions: batch.storageBeforePressing.conditions,
+                        goodOlives: batch.storageBeforePressing.goodOlives,
+                        badOlives: batch.storageBeforePressing.badOlives
+                    },
+                    "M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 18H6V4h2v8l2.5-1.5L13 12V4h5v16z"
+                );
+            }
+
+            // Pressing Process
+            if (batch.pressingProcess && batch.pressingProcess.date) {
+                createStageCard(
+                    "Pressing Process",
+                    batch.pressingProcess.date,
+                    {
+                        pressingId: batch.pressingProcess.pressingId,
+                        facility: batch.pressingProcess.facility,
+                        method: batch.pressingProcess.method,
+                        temperature: batch.pressingProcess.temperature,
+                        pressure: batch.pressingProcess.pressure,
+                        operatorName: batch.pressingProcess.operatorName,
+                        conditions: batch.pressingProcess.conditions
+                    },
+                    "M12 3c-4.97 0-9 3.19-9 7 0 2.38 1.19 4.47 3 5.74V19c0 .55.45 1 1 1h10c.55 0 1-.45 1-1v-3.26c1.81-1.27 3-3.36 3-5.74 0-3.81-4.03-7-9-7zm0 10c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z"
+                );
+            }
+
+            // Storage After Pressing
+            if (batch.storageAfterPressing && batch.storageAfterPressing.duration) {
+                createStageCard(
+                    "Storage After Pressing",
+                    "",
+                    {
+                        tankId: batch.storageAfterPressing.tankId,
+                        pressingId: batch.storageAfterPressing.pressingId,
+                        duration: batch.storageAfterPressing.duration,
+                        temperature: batch.storageAfterPressing.temperature,
+                        humidity: batch.storageAfterPressing.humidity,
+                        inertAtmosphere: batch.storageAfterPressing.inertAtmosphere,
+                        conditions: batch.storageAfterPressing.conditions
+                    },
+                    "M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 18H6V4h2v8l2.5-1.5L13 12V4h5v16z"
+                );
+            }
+
+            // Quality Check
+            if (batch.qualityCheck && batch.qualityCheck.lab) {
+                createStageCard(
+                    "Quality Check",
+                    "",
+                    {
+                        lab: batch.qualityCheck.lab,
+                        onhId: batch.qualityCheck.onhId,
+                        acidity: batch.qualityCheck.acidity,
+                        quality: batch.qualityCheck.quality,
+                        area: batch.qualityCheck.area,
+                        peroxideValue: batch.qualityCheck.peroxideValue,
+                        certifiedOrganic: batch.qualityCheck.certifiedOrganic
+                    },
+                    "M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3zm-1.06 13.54L7.4 12l1.41-1.41 2.12 2.12 4.24-4.24 1.41 1.41-5.64 5.66z"
+                );
+            }
+
+            // Final Status
+            createStageCard(
+                "Final Status",
+                "",
+                {
+                    batchStatus: batch.isFinalized ? "Finalized" : "Not Finalized",
+                    batchId: batchId
+                },
+                "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+            );
+
+            stagesContainer.innerHTML = "";
+            stagesContainer.appendChild(fragment);
+        }
+
+        // Check for potential fraud indicators
+        function checkForFraud(batchId, batch) {
+            const fraudSection = document.getElementById("fraudDetection");
+            const fraudStatus = document.getElementById("fraudStatus");
+            const fraudDetails = document.getElementById("fraudDetails");
+            
+            fraudDetails.innerHTML = "";
+            fraudSection.style.display = "block";
+            
+            let fraudDetected = false;
+            let warnings = 0;
+            
+            // Check 1: Finalization status
+            if (!batch.isFinalized) {
+                addFraudDetail(
+                    "Batch not finalized", 
+                    "This batch has not been finalized in the supply chain, which may indicate incomplete processing or potential tampering.",
+                    "warning"
+                );
+                warnings++;
+            }
+            
+            // Check 2: Transportation conditions
+            if (batch.transportation && batch.transportation.conditions && typeof batch.transportation.conditions === "string") {
+                const conditions = batch.transportation.conditions.toLowerCase();
+                if (conditions.includes("poor")) {
+                    addFraudDetail(
+                        "Poor transportation conditions", 
+                        "The olives were transported under poor conditions which may have affected quality.",
+                        "warning"
+                    );
+                    warnings++;
+                }
+            }
+            
+            // Check 3: Storage conditions before pressing
+            if (batch.storageBeforePressing && batch.storageBeforePressing.temperature && batch.storageBeforePressing.duration) {
+                const tempBeforePressing = Number(batch.storageBeforePressing.temperature) / 10;
+                if (tempBeforePressing > 25) {
+                    addFraudDetail(
+                        "High storage temperature before pressing", 
+                        `Storage temperature (${tempBeforePressing.toFixed(1)}°C) was above recommended levels (max 25°C), which may degrade olive quality.`,
+                        "warning"
+                    );
+                    warnings++;
+                }
+                
+                if ((Number(batch.storageBeforePressing.duration) / 10) > 48) {
+                    addFraudDetail(
+                        "Long storage duration before pressing", 
+                        `Olives were stored for ${(Number(batch.storageBeforePressing.duration) / 10).toFixed(1)} hours before pressing (recommended max 48 hours), which may affect oil quality.`,
+                        "warning"
+                    );
+                    warnings++;
+                }
+            }
+            
+            // Check 4: Quality check values
+            if (batch.qualityCheck && batch.qualityCheck.acidity && batch.qualityCheck.peroxideValue) {
+                const adjustedAcidity = Number(batch.qualityCheck.acidity) / 10;
+                const adjustedPeroxideValue = Number(batch.qualityCheck.peroxideValue) / 426.67;
+
+                if (adjustedAcidity > 0.8) {
+                    addFraudDetail(
+                        "High acidity level", 
+                        `Acidity level (${adjustedAcidity.toFixed(1)}%) exceeds extra virgin olive oil standards (max 0.8%).`,
+                        "danger"
+                    );
+                    fraudDetected = true;
+                }
+                
+                if (adjustedPeroxideValue > 20) {
+                    addFraudDetail(
+                        "High peroxide value", 
+                        `Peroxide value (${adjustedPeroxideValue.toFixed(1)} meq O2/kg) exceeds extra virgin olive oil standards (max 20 meq O2/kg).`,
+                        "danger"
+                    );
+                    fraudDetected = true;
+                }
+            }
+            
+            // Check 5: Storage after pressing conditions
+            if (batch.storageAfterPressing && batch.storageAfterPressing.temperature) {
+                const tempAfterPressing = Number(batch.storageAfterPressing.temperature) / 10;
+                if (tempAfterPressing > 18) {
+                    addFraudDetail(
+                        "High storage temperature after pressing", 
+                        `Oil stored at ${tempAfterPressing.toFixed(1)}°C (recommended max 18°C), which may accelerate degradation.`,
+                        "warning"
+                    );
+                    warnings++;
+                }
+                
+                if (!batch.storageAfterPressing.inertAtmosphere) {
+                    addFraudDetail(
+                        "No inert atmosphere during storage", 
+                        "Oil was not stored under inert atmosphere (nitrogen/argon), increasing oxidation risk.",
+                        "warning"
+                    );
+                    warnings++;
+                }
+            }
+            
+            // Check 6: Missing critical stages
+            if (!batch.harvesting || !batch.pressingProcess || !batch.qualityCheck) {
+                addFraudDetail(
+                    "Missing critical stages", 
+                    "One or more critical stages (harvesting, pressing, quality check) are missing from the record.",
+                    "danger"
+                );
+                fraudDetected = true;
+            }
+            
+            // Update fraud status indicator
+            if (fraudDetected) {
+                fraudStatus.textContent = "Potential Fraud Detected";
+                fraudStatus.className = "fraud-indicator fraud-danger";
+            } else if (warnings > 0) {
+                fraudStatus.textContent = `${warnings} Quality Warnings`;
+                fraudStatus.className = "fraud-indicator fraud-warning";
+            } else {
+                fraudStatus.textContent = "No Issues Detected";
+                fraudStatus.className = "fraud-indicator fraud-safe";
+            }
+            
+            // If no issues found, add a positive message
+            if (!fraudDetected && warnings === 0) {
+                addFraudDetail(
+                    "All checks passed", 
+                    "No quality issues or potential fraud indicators detected in this batch.",
+                    "safe"
+                );
+            }
+        }
+
+        // Add a fraud detail item
+        function addFraudDetail(title, description, type) {
+            const fraudDetails = document.getElementById("fraudDetails");
+            
+            let iconPath;
+            let itemClass;
+            
+            if (type === "danger") {
+                iconPath = "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z";
+                itemClass = "fraud-item-danger";
+            } else if (type === "warning") {
+                iconPath = "M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z";
+                itemClass = "fraud-item-warning";
+            } else {
+                iconPath = "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z";
+                itemClass = "fraud-item-safe";
+            }
+            
+            const item = document.createElement("div");
+            item.className = `fraud-item ${itemClass}`;
+            item.innerHTML = `
+                <svg class="fraud-item-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="${iconPath}"/>
+                </svg>
+                <div>
+                    <strong>${title}</strong>
+                    <div>${description}</div>
+                </div>
+            `;
+            
+            fraudDetails.appendChild(item);
+        }
+
+        // Show status message
+        function showMessage(elementId, message, type = "info") {
+            const element = document.getElementById(elementId);
+            
+            if (!message || type === "clear") {
+                element.innerHTML = "";
+                return;
+            }
+            
+            let className = "";
+            if (type === "error") className = "status-error";
+            if (type === "success") className = "status-success";
+            if (type === "warning") className = "status-warning";
+            
+            element.innerHTML = `
+                <div class="status-message ${className}">
+                    ${message}
+                </div>
+            `;
+        }
+
+        // Initialize when page loads
+        window.addEventListener("load", init);
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- ===============================================-->
+  <!--    Document Title-->
+  <!-- ===============================================-->
+  <title>Log In</title>
+
+  <!-- ===============================================-->
+  <!--    Favicons-->
+  <!-- ===============================================-->
+  <meta name="theme-color" content="#ffffff">
+  <!-- ===============================================-->
+  <!--    Stylesheets-->
+  <!-- ===============================================-->
+  <link href="assets/css/theme.min.css" rel="stylesheet" />
+  <style>
+    #wallet-connection {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    #connectButton {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    #connectButton:hover {
+      background-color: #218838;
+    }
+
+    #status {
+      margin-top: 20px;
+      color: #dc3545;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- ===============================================-->
+  <!--    Main Content-->
+  <!-- ===============================================-->
+  <main class="main" id="top">
+    <section class="py-0" id="header">
+      <div class="bg-holder d-none d-md-block"
+        style="background-image:url(assets/img/illustrations/hero-header.png);background-position:right top;background-size:contain;">
+      </div>
+      <!--/.bg-holder-->
+      <div class="bg-holder d-md-none"
+        style="background-image:url(assets/img/illustrations/hero-bg.png);background-position:right top;background-size:contain;">
+      </div>
+      <!--/.bg-holder-->
+      <div class="container">
+        <div class="row align-items-center min-vh-75 min-vh-lg-100">
+          <div class="col-md-7 col-lg-6 col-xxl-5 py-6 text-sm-start text-center">
+            <h1 class="mt-6 mb-sm-4 fw-semi-bold lh-sm fs-4 fs-lg-5 fs-xl-6">
+              Join the Future of Agriculture<br class="d-block d-lg-block" />with Zitounti
+            </h1>
+            <p class="mb-4 fs-1">
+              Zitounti offers farmers, ranchers, and agricultural producers powerful tools and resources.
+              Sign up today to access farm management apps and educational materials.
+            </p>
+            <!-- <a class="btn btn-lg btn-success" href="#" role="button">Sign Up Now</a> -->
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="py-5" id="SignInOptions">
+      <div class="bg-holder d-none d-sm-block"
+        style="background-image:url(assets/img/illustrations/bg.png);background-position:top left;background-size:225px 755px;margin-top:-17.5rem;">
+      </div>
+      <!--/.bg-holder-->
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-9 mx-auto text-center mb-3">
+            <h5 class="fw-bold fs-3 fs-lg-5 lh-sm mb-3">Choose How You Sign In</h5>
+            <p class="mb-5">Zitounti offers different sign-in paths tailored for farmers, investors, and agricultural
+              advisors. Select the option that fits you best.</p>
+          </div>
+        </div>
+        <div class="row flex-center h-100">
+          <div class="col-xl-9">
+            <div class="row">
+              <div class="col-md-4 mb-5">
+                <div class="card h-100 shadow px-4 px-md-2 px-lg-3 card-span pt-6">
+                  <div class="text-center text-md-start card-hover">
+                    <img class="ps-3 icons" src="assets/img/icons/farmer.svg" height="60" alt="Farmer Icon" />
+                    <div class="card-body">
+                      <h6 class="fw-bold fs-1 heading-color">Sign in as a Farmer</h6>
+                      <p class="mt-3 mb-md-0 mb-lg-2">Access farm management tools, crop tracking, and funding
+                        opportunities tailored for your agricultural operations.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4 mb-5">
+                <div class="card h-100 shadow px-4 px-md-2 px-lg-3 card-span pt-6">
+                  <div class="text-center text-md-start card-hover">
+                    <img class="ps-3 icons" src="assets/img/icons/growth.svg" height="60" alt="Investor Icon" />
+                    <div class="card-body">
+                      <h6 class="fw-bold fs-1 heading-color">Sign in as an Investor</h6>
+                      <p class="mt-3 mb-md-0 mb-lg-2">Browse vetted agricultural projects, monitor impact metrics, and
+                        support sustainable farming through direct investment.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4 mb-5">
+                <div class="card h-100 shadow px-4 px-md-2 px-lg-3 card-span pt-6">
+                  <div class="text-center text-md-start card-hover">
+                    <img class="ps-3 icons" src="assets/img/icons/planting.svg" height="60" alt="Advisor Icon" />
+                    <div class="card-body">
+                      <h6 class="fw-bold fs-1 heading-color">Sign in as an Advisor</h6>
+                      <p class="mt-3 mb-md-0 mb-lg-2">Support farms by sharing your expertise, managing performance
+                        data, and guiding investment-backed strategies.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="wallet-connection">
+              <button id="connectButton">Connect MetaMask</button>
+            </div>
+            <p id="status"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <!-- ===============================================-->
+  <!--    End of Main Content-->
+  <!-- ===============================================-->
+
+  <!-- ===============================================-->
+  <!--    JavaScripts-->
+  <!-- ===============================================-->
+  <script src="vendors/@popperjs/popper.min.js"></script>
+  <script src="vendors/bootstrap/bootstrap.min.js"></script>
+  <script src="vendors/is/is.min.js"></script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>
+  <script src="assets/js/theme.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+  <script>
+    const ADMIN_ADDRESS = "0xb83AAbF4a4679A86f988837Ca87be8dd05390698".toLowerCase();
+    const FARMER_ADDRESS = "0x013e8AaE064294cf146d5743076e8f11CF4489F9".toLowerCase();
+    const TRANS_ADDRESS = "0x06Fdc58AF6750D6180F11EA31cD9eA077b19aCb7".toLowerCase();
+    const PRESS_ADDRESS = "0xf91aCf0Fb5384945c2F82f404f7f5C1856f779cA".toLowerCase();
+    const ONH_ADDRESS = "0x25A1d99D5810568D9582dBF764200D499D65D5fd".toLowerCase();
+    const contractAddress = "0xA7cf92E595D1584C0fdCaDB87Ee48a39d8a65bc9";
+    const contractABI = []; // Optional: only needed if you call contract functions
+
+    let provider;
+    let signer;
+    let contract;
+
+    document.getElementById("connectButton").addEventListener("click", async () => {
+      if (window.ethereum) {
+        try {
+          provider = new ethers.providers.Web3Provider(window.ethereum);
+          await provider.send("eth_requestAccounts", []);
+          signer = provider.getSigner();
+          const userAddress = (await signer.getAddress()).toLowerCase();
+
+          contract = new ethers.Contract(contractAddress, contractABI, signer);
+
+          console.log("Connected address:", userAddress);
+
+          if (userAddress === ADMIN_ADDRESS) {
+            window.location.href = "admin.html";
+          } else if (userAddress === FARMER_ADDRESS) {
+            window.location.href = "farmer22.html";
+          } else if (userAddress === TRANS_ADDRESS) {
+            window.location.href = "transporter22.html";
+          } else if (userAddress === PRESS_ADDRESS) {
+            window.location.href = "logStorageBeforePressing.html";
+          } else if (userAddress === ONH_ADDRESS) {
+            window.location.href = "qualitycheck.html";
+          } else {
+            window.location.href = "indexcl.html";
+          }
+
+        } catch (err) {
+          console.error(err);
+          document.getElementById("status").textContent = "MetaMask connection failed.";
+        }
+      } else {
+        alert("MetaMask is not installed!");
+      }
+    });
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Chivo:wght@300;400;700;900&display=swap" rel="stylesheet">
+</body>
+
+</html>

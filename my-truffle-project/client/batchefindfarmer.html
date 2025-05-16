@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Blog - AgriCulture Bootstrap Template</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <!-- Favicons -->
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Marcellus:wght@400&display=swap"
+    rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="assets/css/main.css" rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <style>
+    .filter-section {
+      background-color: #fff;
+      padding: 30px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-bottom: 30px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .filter-section h3 {
+      color: #1e3a5f;
+      font-size: 1.8rem;
+      font-weight: bold;
+      margin-bottom: 15px;
+      text-transform: uppercase;
+    }
+
+    .filter-section p {
+      color: #6b7280;
+      font-size: 1rem;
+      margin-bottom: 20px;
+    }
+
+    .filter-form {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .filter-form input[type="number"] {
+      flex: 1;
+      padding: 12px;
+      border: 2px solid #10b981;
+      border-radius: 5px;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    .filter-form input[type="number"]:focus {
+      border-color: #059669;
+    }
+
+    .filter-form button {
+      background-color: #10b981;
+      color: #fff;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 5px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .filter-form button:hover {
+      background-color: #059669;
+    }
+
+    .error-message {
+      color: #dc3545;
+      font-size: 0.9rem;
+      margin-top: 10px;
+    }
+
+    /* Batch Card Styling */
+    .batch-card {
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .batch-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .batch-card .post-img img {
+      width: 100%;
+      height: 300px; /* Increased image height */
+      object-fit: cover;
+    }
+
+    .batch-card .meta {
+      padding: 15px 20px; /* Increased padding */
+      background-color: #f8f9fa;
+    }
+
+    .batch-card .meta .farmer-info {
+      font-size: 1.1rem; /* Slightly larger font for farmer name */
+      color: #1e3a5f;
+      font-weight: 500;
+    }
+
+    .batch-card .post-content {
+      padding: 20px; /* Increased padding */
+    }
+
+    .batch-card .post-content h5 {
+      font-size: 1.2rem; /* Slightly larger font for headings */
+      color: #1e3a5f;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .batch-card .post-content span {
+      font-size: 1rem; /* Slightly larger font for text */
+      color: #4b5563;
+    }
+
+    .batch-card .post-content .border-start {
+      border-color: #d1d5db;
+    }
+
+    .batch-card .readmore {
+      color: #10b981;
+      font-weight: 500;
+      font-size: 1rem; /* Slightly larger font for link */
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .batch-card .readmore:hover {
+      color: #059669;
+    }
+
+    @media (max-width: 768px) {
+      .filter-section {
+        padding: 20px;
+      }
+
+      .filter-section h3 {
+        font-size: 1.4rem;
+      }
+
+      .filter-section p {
+        font-size: 0.9rem;
+      }
+
+      .filter-form {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .filter-form input[type="number"] {
+        width: 100%;
+      }
+
+      .filter-form button {
+        width: 100%;
+      }
+
+      .batch-card .post-img img {
+        height: 250px; /* Adjusted for smaller screens */
+      }
+    }
+
+    @media (max-width: 576px) {
+      .filter-section {
+        padding: 15px;
+      }
+
+      .filter-section h3 {
+        font-size: 1.2rem;
+      }
+
+      .filter-section p {
+        font-size: 0.8rem;
+      }
+
+      .batch-card .post-img img {
+        height: 200px; /* Further adjusted for very small screens */
+      }
+    }
+  </style>
+
+  <!-- =======================================================
+  * Template Name: AgriCulture
+  * Template URL: https://bootstrapmade.com/agriculture-bootstrap-website-template/
+  * Updated: Aug 07 2024 with Bootstrap v5.3.3
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+</head>
+
+<body class="blog-page">
+
+  <header id="header" class="header d-flex align-items-center position-relative">
+        <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
+            <a href="index1.html" class="logo d-flex align-items-center">
+                <img src="assets/img/logo.png" alt="AgriCulture">
+            </a>
+            <nav id="navmenu" class="navmenu">
+                <ul>
+                  <li><a href="index1.html">Home</a></li>  
+                  <li><a href="services.html">Field Services</a></li>
+                    <li><a href="farmerinsect.html">Insect Detection</a></li>
+                    <li class="dropdown"><a href="#"><span>BlockChain System</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+                        <ul>
+                            <li><a href="farmer22.html">Create a Batch</a></li>
+                            <li><a href="loadbatches.html">Load My Batches</a></li>
+                            <li><a href="batchefindfarmer.html">View a Batch</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="about.html" class="active">About Us</a></li>
+                </ul>
+                <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+            </nav>
+            <div class="dropdown ms-3">
+                <a href="#" class="d-flex align-items-center" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-person-circle fs-4"></i> <!-- Reverted to Bootstrap icon -->
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="login.html">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+  <main class="main">
+
+    <!-- Page Title -->
+    <div class="page-title dark-background" data-aos="fade"
+      style="background-image: url(assets/img/page-title-bg.webp);">
+      <div class="container position-relative">
+        <h1>Batch Listings</h1>
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a href="index.html">Home</a></li>
+            <li class="current">Batch Listings</li>
+          </ol>
+        </nav>
+      </div>
+    </div><!-- End Page Title -->
+
+    <section id="call-to-action" class="call-to-action">
+      <div class="content">
+        <div class="container">
+          <div class="filter-section">
+            <h3>Filter Your Batch by ID</h3>
+            <p>Quickly search and access your batch records by entering a valid batch ID below!</p>
+            <form action="#" class="filter-form">
+              <input type="number" name="batchId" id="viewBatchId" placeholder="Enter Batch ID">
+              <button type="submit" id="viewBatchBtn">Filter</button>
+            </form>
+            <div class="error-message" id="error-message"></div>
+          </div>
+        </div>
+      </div>
+    </section><!-- /Call To Action Section -->
+
+    <section id="blog-posts-2" class="blog-posts-2 section">
+      <div class="container">
+        <div class="row gy-4" id="batchDetails">
+          <!-- Batch details will be dynamically inserted here -->
+        </div>
+      </div>
+    </section><!-- /Blog Posts 2 Section -->
+
+  </main>
+
+  <footer id="footer" class="footer dark-background">
+
+    <div class="footer-top">
+      <div class="container">
+        <div class="row gy-4">
+          <div class="col-lg-4 col-md-6 footer-about">
+            <a href="index.html" class="logo d-flex align-items-center">
+              <span class="sitename">AgriCulture</span>
+            </a>
+            <div class="footer-contact pt-3">
+              <p>A108 Adam Street</p>
+              <p>New York, NY 535022</p>
+              <p class="mt-3"><strong>Phone:</strong> <span>+1 5589 55488 55</span></p>
+              <p><strong>Email:</strong> <span>info@example.com</span></p>
+            </div>
+          </div>
+
+          <div class="col-lg-2 col-md-3 footer-links">
+            <h4>Useful Links</h4>
+            <ul>
+              <li><a href="#">Home</a></li>
+              <li><a href="#">About us</a></li>
+              <li><a href="#">Services</a></li>
+              <li><a href="#">Terms of service</a></li>
+              <li><a href="#">Privacy policy</a></li>
+            </ul>
+          </div>
+
+          <div class="col-lg-2 col-md-3 footer-links">
+            <h4>Our Services</h4>
+            <ul>
+              <li><a href="#">Web Design</a></li>
+              <li><a href="#">Web Development</a></li>
+              <li><a href="#">Product Management</a></li>
+              <li><a href="#">Marketing</a></li>
+              <li><a href="#">Graphic Design</a></li>
+            </ul>
+          </div>
+
+          <div class="col-lg-2 col-md-3 footer-links">
+            <h4>Hic solutasetp</h4>
+            <ul>
+              <li><a href="#">Molestiae accusamus iure</a></li>
+              <li><a href="#">Excepturi dignissimos</a></li>
+              <li><a href="#">Suscipit distinctio</a></li>
+              <li><a href="#">Dilecta</a></li>
+              <li><a href="#">Sit quas consectetur</a></li>
+            </ul>
+          </div>
+
+          <div class="col-lg-2 col-md-3 footer-links">
+            <h4>Nobis illum</h4>
+            <ul>
+              <li><a href="#">Ipsam</a></li>
+              <li><a href="#">Laudantium dolorum</a></li>
+              <li><a href="#">Dinera</a></li>
+              <li><a href="#">Trodelas</a></li>
+              <li><a href="#">Flexo</a></li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="copyright text-center">
+      <div
+        class="container d-flex flex-column flex-lg-row justify-content-center justify-content-lg-between align-items-center">
+
+        <div class="d-flex flex-column align-items-center align-items-lg-start">
+          <div>
+            © Copyright <strong><span>MyWebsite</span></strong>. All Rights Reserved
+          </div>
+          <div class="credits">
+            <!-- All the links in the footer should remain intact. -->
+            <!-- You can delete the links only if you purchased the pro version. -->
+            <!-- Licensing information: https://bootstrapmade.com/license/ -->
+            <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/herobiz-bootstrap-business-template/ -->
+            Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a> Distributed by <a
+              href="https://themewagon.com">ThemeWagon</a>
+          </div>
+        </div>
+
+        <div class="social-links order-first order-lg-last mb-3 mb-lg-0">
+          <a href=""><i class="bi bi-twitter-x"></i></a>
+          <a href=""><i class="bi bi-facebook"></i></a>
+          <a href=""><i class="bi bi-instagram"></i></a>
+          <a href=""><i class="bi bi-linkedin"></i></a>
+        </div>
+
+      </div>
+    </div>
+
+  </footer>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
+      class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Preloader -->
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/php-email-form/validate.js"></script>
+  <script src="assets/vendor/aos/aos.js"></script>
+  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <!-- Main JS File -->
+  <script src="assets/js/main.js"></script>
+
+  <script>
+    const contractAddress = '0xA7cf92E595D1584C0fdCaDB87Ee48a39d8a65bc9';
+    const contractABI = [
+      {
+        "inputs": [
+          { "internalType": "string", "name": "farmer", "type": "string" },
+          { "internalType": "string", "name": "harvestDate", "type": "string" },
+          { "internalType": "string", "name": "location", "type": "string" },
+          { "internalType": "string", "name": "method", "type": "string" },
+          { "internalType": "uint256", "name": "quantity", "type": "uint256" },
+          { "internalType": "string", "name": "variety", "type": "string" }
+        ],
+        "name": "createBatch",
+        "outputs": [
+          { "internalType": "uint256", "name": "batchId", "type": "uint256" }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          { "internalType": "uint256", "name": "batchId", "type": "uint256" }
+        ],
+        "name": "getBatch",
+        "outputs": [
+          {
+            "components": [
+              {
+                "components": [
+                  { "internalType": "string", "name": "farmer", "type": "string" },
+                  { "internalType": "string", "name": "date", "type": "string" },
+                  { "internalType": "string", "name": "location", "type": "string" },
+                  { "internalType": "string", "name": "method", "type": "string" },
+                  { "internalType": "uint256", "name": "quantity", "type": "uint256" },
+                  { "internalType": "string", "name": "variety", "type": "string" }
+                ],
+                "internalType": "struct Harvesting",
+                "name": "harvesting",
+                "type": "tuple"
+              },
+              {
+                "components": [
+                  { "internalType": "uint256", "name": "duration", "type": "uint256" },
+                  { "internalType": "string", "name": "conditions", "type": "string" },
+                  { "internalType": "string", "name": "transporterId", "type": "string" },
+                  { "internalType": "string", "name": "vehicleType", "type": "string" }
+                ],
+                "internalType": "struct Transportation",
+                "name": "transportation",
+                "type": "tuple"
+              },
+              {
+                "components": [
+                  { "internalType": "uint256", "name": "duration", "type": "uint256" },
+                  { "internalType": "string", "name": "pressingId", "type": "string" },
+                  { "internalType": "string", "name": "conditions", "type": "string" },
+                  { "internalType": "uint256", "name": "temperature", "type": "uint256" },
+                  { "internalType": "uint256", "name": "humidity", "type": "uint256" },
+                  { "internalType": "uint256", "name": "goodOlives", "type": "uint256" },
+                  { "internalType": "uint256", "name": "badOlives", "type": "uint256" }
+                ],
+                "internalType": "struct StorageBeforePressing",
+                "name": "storageBeforePressing",
+                "type": "tuple"
+              },
+              {
+                "components": [
+                  { "internalType": "string", "name": "date", "type": "string" },
+                  { "internalType": "string", "name": "pressingId", "type": "string" },
+                  { "internalType": "string", "name": "facility", "type": "string" },
+                  { "internalType": "string", "name": "method", "type": "string" },
+                  { "internalType": "string", "name": "conditions", "type": "string" },
+                  { "internalType": "uint256", "name": "temperature", "type": "uint256" },
+                  { "internalType": "uint256", "name": "pressure", "type": "uint256" },
+                  { "internalType": "string", "name": "operatorName", "type": "string" }
+                ],
+                "internalType": "struct PressingProcess",
+                "name": "pressingProcess",
+                "type": "tuple"
+              },
+              {
+                "components": [
+                  { "internalType": "string", "name": "tankId", "type": "string" },
+                  { "internalType": "string", "name": "pressingId", "type": "string" },
+                  { "internalType": "uint256", "name": "duration", "type": "uint256" },
+                  { "internalType": "string", "name": "conditions", "type": "string" },
+                  { "internalType": "uint256", "name": "temperature", "type": "uint256" },
+                  { "internalType": "uint256", "name": "humidity", "type": "uint256" },
+                  { "internalType": "bool", "name": "inertAtmosphere", "type": "bool" }
+                ],
+                "internalType": "struct StorageAfterPressing",
+                "name": "storageAfterPressing",
+                "type": "tuple"
+              },
+              {
+                "components": [
+                  { "internalType": "string", "name": "lab", "type": "string" },
+                  { "internalType": "string", "name": "onhId", "type": "string" },
+                  { "internalType": "uint256", "name": "acidity", "type": "uint256" },
+                  { "internalType": "string", "name": "quality", "type": "string" },
+                  { "internalType": "string", "name": "area", "type": "string" },
+                  { "internalType": "uint256", "name": "peroxideValue", "type": "uint256" },
+                  { "internalType": "bool", "name": "certifiedOrganic", "type": "bool" }
+                ],
+                "internalType": "struct QualityCheck",
+                "name": "qualityCheck",
+                "type": "tuple"
+              },
+              { "internalType": "bool", "name": "isFinalized", "type": "bool" }
+            ],
+            "internalType": "struct Batch",
+            "name": "",
+            "type": "tuple"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "name": "getBatchCount",
+        "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          { "internalType": "address", "name": "farmer", "type": "address" }
+        ],
+        "name": "getBatchesByFarmer",
+        "outputs": [
+          { "internalType": "uint256[]", "name": "", "type": "uint256[]" }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      }
+    ];
+
+    let provider;
+    let signer;
+    let contract;
+    let currentAccount;
+
+    function toChecksumAddress(address) {
+      return ethers.utils.getAddress(address.toLowerCase());
+    }
+
+    function showError(message) {
+      const element = document.getElementById('error-message');
+      element.innerHTML = message;
+      setTimeout(() => {
+        element.innerHTML = '';
+      }, 5000);
+    }
+
+    async function init() {
+      if (window.ethereum) {
+        try {
+          provider = new ethers.providers.Web3Provider(window.ethereum);
+          const accounts = await provider.send("eth_requestAccounts", []);
+          if (accounts.length === 0) {
+            showError("No Ethereum account connected. Please connect MetaMask.");
+            return;
+          }
+          signer = provider.getSigner();
+          contract = new ethers.Contract(contractAddress, contractABI, signer);
+          
+          currentAccount = await signer.getAddress();
+          console.log("Connected with account:", currentAccount);
+
+          window.ethereum.on('accountsChanged', async (accounts) => {
+            if (accounts.length > 0) {
+              currentAccount = accounts[0];
+              console.log("Switched to account:", currentAccount);
+            } else {
+              showError("No account connected. Please reconnect MetaMask.");
+            }
+          });
+        } catch (error) {
+          console.error("Error connecting:", error);
+          showError("Error connecting to Ethereum: " + error.message);
+        }
+      } else {
+        showError("Please install MetaMask to use this application!");
+      }
+    }
+
+    async function viewBatchById() {
+      const batchId = document.getElementById('viewBatchId').value;
+      if (!batchId) {
+        showError("Please enter a batch ID");
+        return;
+      }
+
+      try {
+        const batch = await contract.getBatch(batchId);
+        if (!batch || !batch.harvesting) {
+          throw new Error('Batch does not exist');
+        }
+
+        const status = batch.isFinalized ? 'Completed' : 'In Progress';
+        const farmerName = batch.harvesting.farmer || 'Unknown';
+        const html = `
+          <div class="col-12 col-md-8 col-lg-6 mx-auto"> <!-- Increased width: col-lg-6 instead of col-lg-4 -->
+            <article class="batch-card position-relative">
+              <div class="post-img position-relative overflow-hidden">
+                <img src="assets/img/blog/oilveoil.jpg" class="img-fluid" alt="Batch Image">
+              </div>
+              <div class="meta d-flex align-items-end">
+                <div class="d-flex align-items-center farmer-info">
+                  <i class="bi bi-person me-2"></i>
+                  <span>${farmerName}</span>
+                </div>
+              </div>
+              <div class="post-content d-flex flex-column">
+                <div class="d-flex justify-content-between mt-2">
+                  <div class="d-flex flex-column text-center w-50">
+                    <h5 class="mb-0">Batch ID</h5>
+                    <span>${batchId}</span>
+                  </div>
+                  <div class="border-start"></div>
+                  <div class="d-flex flex-column text-center w-50">
+                    <h5 class="mb-0">Status</h5>
+                    <span>${status}</span>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-start mt-3">
+                  <a href="batchdetailsfarmer.html?batchId=${batchId}" class="readmore stretched-link">
+                    <span>More Details</span>
+                    <i class="bi bi-arrow-right ms-1"></i>
+                  </a>
+                </div>
+              </div>
+            </article>
+          </div>
+        `;
+
+        document.getElementById('batchDetails').innerHTML = html;
+      } catch (err) {
+        console.error(err);
+        showError(`Error: ${err.reason || err.message || 'Batch does not exist'}`);
+        document.getElementById('batchDetails').innerHTML = '';
+      }
+    }
+
+    document.getElementById('viewBatchBtn').addEventListener('click', function(event) {
+      event.preventDefault();
+      viewBatchById();
+    });
+
+    window.addEventListener('load', init);
+  </script>
+
+</body>
+
+</html>
