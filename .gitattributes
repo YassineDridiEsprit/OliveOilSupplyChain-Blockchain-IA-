@@ -1,1 +1,7 @@
 ApiModels/*.h5 filter=lfs diff=lfs merge=lfs -text
+ApiModels/*.pt filter=lfs diff=lfs merge=lfs -text
+ApiModels/*.pkl filter=lfs diff=lfs merge=lfs -text
+ApiModels/*.pth filter=lfs diff=lfs merge=lfs -text
+ApiModels/*.zip filter=lfs diff=lfs merge=lfs -text
+ApiModels/*.jpg filter=lfs diff=lfs merge=lfs -text
+ApiModels/*.png filter=lfs diff=lfs merge=lfs -text
